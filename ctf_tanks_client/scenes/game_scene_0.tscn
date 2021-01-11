@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://textures/misc/uv_checker.png" type="Texture" id=1]
+[ext_resource path="res://prefabs/tanks/light/LightTank.tscn" type="PackedScene" id=2]
 
 [sub_resource type="CubeMesh" id=1]
 
@@ -16,8 +17,7 @@ points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1,
 [sub_resource type="ConvexPolygonShape" id=5]
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[node name="Game" type="Spatial"]
-transform = Transform( 1.24657, 0, 0, 0, 1.24657, 0, 0, 0, 1.24657, 0, 0, 0 )
+[node name="Game" type="Node"]
 
 [node name="Scenary" type="Spatial" parent="."]
 
@@ -83,8 +83,18 @@ transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
 shape = SubResource( 5 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 0.603809, -0.296642, 0.436972, 0, 0.663713, 0.450568, -0.528149, -0.339138, 0.499571, 71.2158, 72.2326, 79.8369 )
+transform = Transform( 0.75269, -0.369785, 0.544716, 0, 0.827365, 0.561664, -0.658375, -0.422759, 0.62275, 57.1348, 57.7136, 63.7388 )
 projection = 1
 current = true
-size = 170.0
+size = 130.0
 far = 579.7
+
+[node name="light_tank" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00105286, 1.74089, -0.000749588 )
+m_gravity = -20.0
+m_wheelBase = 5.0
+m_enginePower = 200.0
+m_bracking = -150.0
+m_friction = -0.5
+m_drag = -0.5
+m_turretOpeningAngle = 1.0

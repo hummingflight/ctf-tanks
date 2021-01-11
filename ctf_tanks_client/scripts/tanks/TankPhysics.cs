@@ -157,8 +157,8 @@ public class TankPhysics : KinematicBody
   _Process(float _delta)
   {
 
-    float steerValue = Input.GetActionStrength("steer_left")
-                     - Input.GetActionStrength("steer_right");
+    float steerValue = Input.GetActionStrength("steer_right")
+                     - Input.GetActionStrength("steer_left");
 
     Steer(steerValue);
 
