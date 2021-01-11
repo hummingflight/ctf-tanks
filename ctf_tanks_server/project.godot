@@ -16,6 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="CTF Tanks Server"
+run/main_scene="res://scenes/Server.tscn"
 config/icon="res://icon.png"
 
 [rendering]
