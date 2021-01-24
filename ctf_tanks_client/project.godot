@@ -19,10 +19,6 @@ config/name="CTF Tanks Client"
 run/main_scene="res://scenes/game_scene_0.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-ConnectionManager="*res://scripts/Managers/ConnectionManager/ConnectionManager.cs"
-
 [input]
 
 steer_left={

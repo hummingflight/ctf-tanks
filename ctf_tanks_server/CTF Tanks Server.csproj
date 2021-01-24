@@ -3,4 +3,7 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>CTFTanksServer</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="scripts\Managers\Master\" />
+  </ItemGroup>
 </Project>

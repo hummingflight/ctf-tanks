@@ -1,96 +1,81 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://textures/misc/uv_checker.png" type="Texture" id=1]
+[ext_resource path="res://prefabs/props/Floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://prefabs/tanks/light/LightTank.tscn" type="PackedScene" id=2]
-
-[sub_resource type="CubeMesh" id=1]
-
-[sub_resource type="SpatialMaterial" id=2]
-albedo_texture = ExtResource( 1 )
-uv1_scale = Vector3( 4, 4, 4 )
-
-[sub_resource type="ConvexPolygonShape" id=3]
-points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
-
-[sub_resource type="CubeMesh" id=4]
-
-[sub_resource type="ConvexPolygonShape" id=5]
-points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
+[ext_resource path="res://prefabs/props/Wall.tscn" type="PackedScene" id=3]
+[ext_resource path="res://prefabs/props/CylinderWall.tscn" type="PackedScene" id=4]
 
 [node name="Game" type="Node"]
 
 [node name="Scenary" type="Spatial" parent="."]
 
-[node name="Floor" type="StaticBody" parent="Scenary"]
+[node name="Floor" parent="Scenary" instance=ExtResource( 1 )]
+transform = Transform( 100, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/Floor"]
-transform = Transform( 79.3217, 0, 0, 0, 0.793217, 0, 0, 0, 79.3217, 0, 0, 0 )
-mesh = SubResource( 1 )
-material/0 = SubResource( 2 )
+[node name="InternalWalls" type="Spatial" parent="Scenary"]
 
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/Floor"]
-transform = Transform( 79.3217, 0, 0, 0, 0.793217, 0, 0, 0, 79.3217, 0, 0, 0 )
-shape = SubResource( 3 )
+[node name="Wall" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 12, 0, 0, 0, 6, 0, 0, 0, 12, 65, 0, -65 )
 
-[node name="Boxes" type="Spatial" parent="Scenary"]
+[node name="Wall5" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 12, 0, 0, 0, 6, 0, 0, 0, 12, -65, 0, -65 )
 
-[node name="Box" type="StaticBody" parent="Scenary/Boxes"]
-transform = Transform( 1.89361, 0, 0, 0, 1, 0, 0, 0, 1.89361, 37.9654, 5.69771, -40.4505 )
+[node name="Wall6" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 12, 0, 0, 0, 6, 0, 0, 0, 12, -65, 0, 65 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/Boxes/Box"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-mesh = SubResource( 4 )
-material/0 = null
+[node name="Wall7" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 12, 0, 0, 0, 6, 0, 0, 0, 12, 64.6355, 0, 65 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/Boxes/Box"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-shape = SubResource( 5 )
+[node name="Wall3" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 18, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, -65 )
 
-[node name="Box2" type="StaticBody" parent="Scenary/Boxes"]
-transform = Transform( 1.89361, 0, 0, 0, 1, 0, 0, 0, 1.89361, 37.9654, 5.69771, 40.4801 )
+[node name="Wall13" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( -2.93257e-06, 0, 6, 0, 6, 0, -18, 0, -9.77524e-07, -65, 0, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/Boxes/Box2"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-mesh = SubResource( 4 )
-material/0 = null
+[node name="Wall19" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 7.07107, 0, 7.07107, 0, 6, 0, -7.07107, 0, 7.07107, 35.2679, 0, 35 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/Boxes/Box2"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-shape = SubResource( 5 )
+[node name="Wall20" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 7.07107, 0, 7.07107, 0, 6, 0, -7.07107, 0, 7.07107, -35, 0, 35 )
 
-[node name="Box3" type="StaticBody" parent="Scenary/Boxes"]
-transform = Transform( 1.89361, 0, 0, 0, 1, 0, 0, 0, 1.89361, -30.9696, 5.69771, -40.4505 )
+[node name="Wall21" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 7.07107, 0, 7.07107, 0, 6, 0, -7.07107, 0, 7.07107, 35, 0, -35 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/Boxes/Box3"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-mesh = SubResource( 4 )
-material/0 = null
+[node name="Wall22" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 7.07107, 0, 7.07107, 0, 6, 0, -7.07107, 0, 7.07107, -35, 0, -35 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/Boxes/Box3"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-shape = SubResource( 5 )
+[node name="Wall8" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( 18, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 65 )
 
-[node name="Box4" type="StaticBody" parent="Scenary/Boxes"]
-transform = Transform( 1.89361, 0, 0, 0, 1, 0, 0, 0, 1.89361, -30.9696, 5.69771, 40.4801 )
+[node name="Wall15" parent="Scenary/InternalWalls" instance=ExtResource( 3 )]
+transform = Transform( -2.93257e-06, 0, 6, 0, 6, 0, -18, 0, -9.77524e-07, 65, 0, 0 )
 
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/Boxes/Box4"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-mesh = SubResource( 4 )
-material/0 = null
+[node name="CylinderWall" parent="Scenary/InternalWalls" instance=ExtResource( 4 )]
+transform = Transform( 25, 0, 0, 0, 5, 0, 0, 0, 25, 0, 0, 0 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/Boxes/Box4"]
-transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
-shape = SubResource( 5 )
+[node name="ExteneralWalls" type="Spatial" parent="Scenary"]
+
+[node name="Wall" parent="Scenary/ExteneralWalls" instance=ExtResource( 3 )]
+transform = Transform( 100, 0, 0, 0, 6, 0, 0, 0, 6, -0.106, 0, -100 )
+
+[node name="Wall3" parent="Scenary/ExteneralWalls" instance=ExtResource( 3 )]
+transform = Transform( -1.62921e-05, 0, 6, 0, 6, 0, -100, 0, -9.77524e-07, 100, 0, 0 )
+
+[node name="Wall4" parent="Scenary/ExteneralWalls" instance=ExtResource( 3 )]
+transform = Transform( -1.62921e-05, 0, 6, 0, 6, 0, -100, 0, -9.77524e-07, -100.015, 0, 0.423 )
+
+[node name="Wall2" parent="Scenary/ExteneralWalls" instance=ExtResource( 3 )]
+transform = Transform( 100, 0, 0, 0, 6, 0, 0, 0, 6, 0.007, 0, 99.922 )
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( 0.75269, -0.369785, 0.544716, 0, 0.827365, 0.561664, -0.658375, -0.422759, 0.62275, 57.1348, 57.7136, 63.7388 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 50.8805, 0 )
 projection = 1
 current = true
-size = 130.0
+size = 207.94
 far = 579.7
 
 [node name="light_tank" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00105286, 1.74089, -0.000749588 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00105286, 1.74089, 85.3814 )
 m_gravity = -20.0
 m_wheelBase = 5.0
 m_enginePower = 200.0

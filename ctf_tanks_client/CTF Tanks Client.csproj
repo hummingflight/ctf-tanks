@@ -3,4 +3,10 @@
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>CTFTanksClient</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scripts\Managers\Master\" />
+  </ItemGroup>
 </Project>
