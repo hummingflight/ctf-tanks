@@ -20,7 +20,7 @@ public class Actor<T>
   {
 
     // Call ready method for each component.
-    foreach (KeyValuePair<COMPONENT_ID, NodeComponent<T>> pair in _m_hComponents)
+    foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
       pair.Value._Ready();
@@ -36,7 +36,7 @@ public class Actor<T>
   {
 
     // Update each component.
-    foreach(KeyValuePair<COMPONENT_ID, NodeComponent<T>> pair in _m_hComponents)
+    foreach(KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
       pair.Value._Process(_delta);
@@ -52,7 +52,7 @@ public class Actor<T>
   {
 
     // Update each component.
-    foreach (KeyValuePair<COMPONENT_ID, NodeComponent<T>> pair in _m_hComponents)
+    foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
       pair.Value._PhysicsProcess(_delta);
@@ -69,7 +69,7 @@ public class Actor<T>
   /// <param name="_component">Component</param>
   /// <returns></returns>
   public OPERATION_RESULT 
-  AddComponent(NodeComponent<T> _component)
+  AddComponent(Component<T> _component)
   {
 
     COMPONENT_ID componentID = _component.GetID();
@@ -110,7 +110,7 @@ public class Actor<T>
   /// </summary>
   /// <param name="_componentID">Component ID.</param>
   /// <returns>The removed node. Null if the node doesn't exists.</returns>
-  public NodeComponent<T>
+  public Component<T>
   RemoveComponent(COMPONENT_ID _componentID)
   {
 
@@ -118,7 +118,7 @@ public class Actor<T>
     {
 
       // Get Component.
-       NodeComponent<T> component = _m_hComponents[_componentID];
+       Component<T> component = _m_hComponents[_componentID];
 
       // Call OnDisconnect method.
       component.OnDisconnect();
@@ -150,7 +150,7 @@ public class Actor<T>
   {
 
     // Remove component from this node.
-    NodeComponent<T> component = RemoveComponent(_componentID);
+    Component<T> component = RemoveComponent(_componentID);
 
     if(component == null)
     {
@@ -178,7 +178,7 @@ public class Actor<T>
   {
 
     // Send message to each component.
-    foreach (KeyValuePair<COMPONENT_ID, NodeComponent<T>> pair in _m_hComponents)
+    foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
       pair.Value.ReceiveMessage(_messageID, _message);
@@ -206,7 +206,7 @@ public class Actor<T>
   {
 
     // Send message to each component.
-    foreach (KeyValuePair<COMPONENT_ID, NodeComponent<T>> pair in _m_hComponents)
+    foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
       pair.Value.Destroy();
@@ -225,7 +225,7 @@ public class Actor<T>
   /// <summary>
   /// Map of components in this node.
   /// </summary>
-  protected Dictionary<COMPONENT_ID, NodeComponent<T>> _m_hComponents;
+  protected Dictionary<COMPONENT_ID, Component<T>> _m_hComponents;
 
   /// <summary>
   /// The wrapped node.
