@@ -1,4 +1,4 @@
-﻿public class NodeComponent<T>
+﻿public class Component<T>
 {
 
   /// <summary>
@@ -105,7 +105,7 @@
   /// </summary>
   /// <param name="_compositeNode"></param>
   public void
-  SetComponentManager(ComponentManager<T> _compositeNode)
+  SetComponentManager(Actor<T> _compositeNode)
   {
 
     // Set the composite node.
@@ -131,7 +131,7 @@
   /// <summary>
   /// The composite node of this component.
   /// </summary>
-  protected ComponentManager<T> _m_componentManager;
+  protected Actor<T> _m_componentManager;
 
   /// <summary>
   /// The wrapped node in the composite node.

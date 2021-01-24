@@ -2,11 +2,11 @@
 
 using System.Collections.Generic;
 
-public class ComponentManager<T>
+public class Actor<T>
 {
 
   public 
-  ComponentManager(T _node)
+  Actor(T _node)
   {
 
     _m_node = _node;
