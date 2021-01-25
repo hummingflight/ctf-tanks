@@ -1,8 +1,9 @@
-using Godot;
-using System;
+﻿using Godot;
 
-public class TankPhysics : KinematicBody
+public class CmpTankPhysics
+  : Component<KinematicBody>
 {
+
   // Declare member variables here. Examples:
   // private int a = 2;
   // private string b = "text";
@@ -34,11 +35,11 @@ public class TankPhysics : KinematicBody
 
     // Get Properties
 
-    _m_frontRayCast = GetNode<RayCast>("FrontRayCast");
+    _m_frontRayCast = _m_node.GetNode<RayCast>("FrontRayCast");
 
-    _m_rearRayCast = GetNode<RayCast>("RearRayCast");
+    _m_rearRayCast = _m_node.GetNode<RayCast>("RearRayCast");
 
-    _m_torret = GetNode<Spatial>("TankRoot/Cartoon_TL_Base/Turret");
+    _m_torret = _m_node.GetNode<Spatial>("TankRoot/Cartoon_TL_Base/Turret");
 
     return;
 
@@ -50,9 +51,12 @@ public class TankPhysics : KinematicBody
   /// <param name="delta"></param>
   public override void
   _PhysicsProcess(float delta)
-  {   
+  {
 
-    if(IsOnFloor())
+    // Update steer
+    _UpdateSteer();
+
+    if (_m_node.IsOnFloor())
     {
 
       // Update acceleration vector.
@@ -91,17 +95,23 @@ public class TankPhysics : KinematicBody
 
     // Move Tank
 
-    m_velocity = MoveAndSlideWithSnap(m_velocity, -Transform.basis.y, Vector3.Up, true);
+    m_velocity = _m_node.MoveAndSlideWithSnap
+      (
+        m_velocity, 
+        -_m_node.Transform.basis.y, 
+        Vector3.Up, 
+        true
+      );
 
     // Ramp
 
-    if(_m_frontRayCast.IsColliding() || _m_rearRayCast.IsColliding())
+    if (_m_frontRayCast.IsColliding() || _m_rearRayCast.IsColliding())
     {
 
       Vector3 nf;
       Vector3 nr;
 
-      if(_m_frontRayCast.IsColliding())
+      if (_m_frontRayCast.IsColliding())
       {
 
         nf = _m_frontRayCast.GetCollisionNormal();
@@ -114,7 +124,7 @@ public class TankPhysics : KinematicBody
 
       }
 
-      if(_m_rearRayCast.IsColliding())
+      if (_m_rearRayCast.IsColliding())
       {
 
         nr = _m_rearRayCast.GetCollisionNormal();
@@ -127,10 +137,10 @@ public class TankPhysics : KinematicBody
 
       }
 
-      
+
       Vector3 n = ((nr + nf) * 0.5f);
 
-      if(n.Length() == 0.0f)
+      if (n.Length() == 0.0f)
       {
 
         n = Vector3.Up;
@@ -143,9 +153,9 @@ public class TankPhysics : KinematicBody
 
       }
 
-      Transform xForm = _AlignWithY(GlobalTransform, n);
+      Transform xForm = _AlignWithY(_m_node.GlobalTransform, n);
 
-      GlobalTransform = GlobalTransform.InterpolateWith(xForm, 0.1f);
+      _m_node.GlobalTransform = _m_node.GlobalTransform.InterpolateWith(xForm, 0.1f);
 
     }
 
@@ -153,52 +163,24 @@ public class TankPhysics : KinematicBody
 
   }
 
-  public override void
-  _Process(float _delta)
-  {
 
-    float steerValue = Input.GetActionStrength("steer_right")
-                     - Input.GetActionStrength("steer_left");
+  float m_gravity = -20.0f;
 
-    Steer(steerValue);
+  float m_wheelBase = 5.0f;
 
-    return;
+  float m_steeringLimit = 10.0f;
 
-  }
+  float m_enginePower = 200.0f;
 
-  /// <summary>
-  /// Steer the vehicle, with a value from [-1.0 , 1.0] proportional to the 
-  /// steering limit.
-  /// </summary>
-  /// <param name="_value">value from [-1.0, 1.0]</param>
-  public void    
-  Steer(float _value)
-  {
+  float m_bracking = -150.0f;
 
-    m_steerAngle = _value * m_steeringLimit;   
+  float m_friction = -0.2f;
 
-    return;
+  float m_drag = -0.2f;
 
-  }
+  float m_maxSpeedReverse = 3.0f;
 
-
-  [Export] float m_gravity = 20.0f;
-
-  [Export] float m_wheelBase = 0.6f;
-
-  [Export] float m_steeringLimit = 10.0f;
-
-  [Export] float m_enginePower = 6.0f;
-
-  [Export] float m_bracking = -9.0f;
-
-  [Export] float m_friction = -2.0f;
-
-  [Export] float m_drag = -2.0f;
-
-  [Export] float m_maxSpeedReverse = 3.0f;
-
-  [Export] float m_turretOpeningAngle = 1.57f;
+  float m_turretOpeningAngle = 1.57f;
 
   Vector3 m_acceleration;
 
@@ -218,27 +200,48 @@ public class TankPhysics : KinematicBody
 
   float m_steerAngle;
 
+  /// <summary>
+  /// 
+  /// </summary>
+  private void
+  _UpdateSteer()
+  {
+
+    BlackboardItem steerItem = _m_actor.m_blackboard.GetItem
+      (
+        BLACKBOARD_ITEM.kTank_Steering
+      );
+
+    m_steerAngle = steerItem.fValue * m_steeringLimit;
+
+    return;
+
+  }
+
 
   /// <summary>
   /// Calculates the steering of the car.
   /// </summary>
   /// <param name="_delta">delta time.</param>
-  private void 
+  private void
   _UpdateVelocity(float _delta)
   {
 
     // Get Wheels position.
 
-    Vector3 direction = -Transform.basis.z;
+    Vector3 direction = -_m_node.Transform.basis.z;
     float halfWheelBase = m_wheelBase * 0.5f;
 
-    m_rearWheelPosition = Transform.origin - direction * halfWheelBase;
-    m_frontWheelPosition = Transform.origin + direction * halfWheelBase;
+    m_rearWheelPosition = _m_node.Transform.origin - direction * halfWheelBase;
+    m_frontWheelPosition = _m_node.Transform.origin + direction * halfWheelBase;
 
     // Move Wheels
 
     m_rearWheelPosition += m_velocity * _delta;
-    m_frontWheelPosition += m_velocity.Rotated(Transform.basis.y.Normalized(), m_steerAngle) * _delta;
+    m_frontWheelPosition += m_velocity.Rotated
+      (
+      _m_node.Transform.basis.y.Normalized(), m_steerAngle
+      ) * _delta;
 
     // Calculate the new direction
 
@@ -246,7 +249,7 @@ public class TankPhysics : KinematicBody
 
     // Calculate the new velocity
 
-    if(direction.Dot(m_velocity) > 0)
+    if (direction.Dot(m_velocity) > 0)
     {
 
       m_velocity = direction * m_velocity.Length();
@@ -259,11 +262,15 @@ public class TankPhysics : KinematicBody
 
     }
 
-    
+
 
     // Rotate
 
-    LookAt(Transform.origin + direction, Transform.basis.y);
+    _m_node.LookAt
+      (
+        _m_node.Transform.origin + direction, 
+        _m_node.Transform.basis.y
+      );
 
     return;
 
@@ -272,10 +279,17 @@ public class TankPhysics : KinematicBody
   private void
   _UpdateAcceleration(float _deltaTime)
   {
+    
+    // Get acceleration strength from blackboard.
+    BlackboardItem accelerationStrength = _m_actor.m_blackboard.GetItem
+      (
+        BLACKBOARD_ITEM.kAcceleration_Strength
+      );
 
-    float accMultiplier = Input.GetActionStrength("accelerate");
-
-    m_acceleration = -Transform.basis.z * m_enginePower * accMultiplier;
+    // Set acceleration vector.
+    m_acceleration = -_m_node.Transform.basis.z * 
+                     m_enginePower * 
+                     accelerationStrength.fValue;
 
     return;
 
@@ -285,9 +299,16 @@ public class TankPhysics : KinematicBody
   _UpdateBreak(float _delta)
   {
 
-    float breakMultiplier = Input.GetActionStrength("break");
+    // Get acceleration strength from blackboard.
+    BlackboardItem reverseStrength = _m_actor.m_blackboard.GetItem
+      (
+        BLACKBOARD_ITEM.kReverse_Strength
+      );
 
-    m_breakForce = -Transform.basis.z * breakMultiplier * m_bracking;
+    // Set reverse vector.
+    m_breakForce = -_m_node.Transform.basis.z * 
+                   reverseStrength.fValue * 
+                   m_bracking;
 
     return;
 
@@ -320,7 +341,7 @@ public class TankPhysics : KinematicBody
 
   }
 
-  
+
 
   private Transform
   _AlignWithY(Transform _transform, Vector3 _AxisY)
