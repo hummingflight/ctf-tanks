@@ -1,15 +1,22 @@
 ﻿using Godot;
-
 using System.Collections.Generic;
 
 public class Actor<T>
 {
 
+  /// <summary>
+  /// Create an actor and wrap a node.
+  /// </summary>
+  /// <param name="_node">Wrapped node.</param>
   public 
   Actor(T _node)
   {
 
     _m_node = _node;
+
+    m_blackboard = new Blackboard();
+
+    _m_hComponents = new Dictionary<COMPONENT_ID, Component<T>>();
 
     return;
 
@@ -63,6 +70,35 @@ public class Actor<T>
 
   }
 
+  public U 
+  GetComponent<U>(COMPONENT_ID _componentID) where U : Component<T>
+  {
+
+    if(HasComponent(_componentID))
+    {
+
+      return _m_hComponents[_componentID] as U;
+
+    }
+    else
+    {
+
+      GD.Print("Component: " + _componentID.ToString() + " doesn't exists.");
+
+      return default;
+
+    }    
+
+  }
+
+  public bool
+  HasComponent(COMPONENT_ID _componentID)
+  {
+
+    return _m_hComponents.ContainsKey(_componentID);
+
+  }
+
   /// <summary>
   /// Adds a component to this component manager.
   /// </summary>
@@ -75,7 +111,7 @@ public class Actor<T>
     COMPONENT_ID componentID = _component.GetID();
 
     // Check if a component of same type already exists in this Node.
-    if(_m_hComponents.ContainsKey(componentID))
+    if(HasComponent(componentID))
     {
 
       // Log error.
@@ -91,8 +127,8 @@ public class Actor<T>
       // Add component to this node.
       _m_hComponents.Add(componentID, _component);
 
-      // Set self as the component manager of the component.
-      _component.SetComponentManager(this);
+      // Set self as the actor of the component.
+      _component.SetActor(this);
 
       // Call OnConnect method.
       _component.OnConnect();
@@ -114,7 +150,7 @@ public class Actor<T>
   RemoveComponent(COMPONENT_ID _componentID)
   {
 
-    if(_m_hComponents.ContainsKey(_componentID))
+    if(HasComponent(_componentID))
     {
 
       // Get Component.
@@ -201,11 +237,15 @@ public class Actor<T>
 
   }
 
+  /// <summary>
+  /// Safely destroys this actor. The "Destroy" method of each children will be
+  /// called.
+  /// </summary>
   public void
   Destroy()
   {
 
-    // Send message to each component.
+    // Destroy each component.
     foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
 
@@ -216,11 +256,16 @@ public class Actor<T>
     _m_hComponents.Clear();
     _m_hComponents = null;
 
-    _m_node = default(T);
+    _m_node = default;
 
     return;
 
   }
+
+  /// <summary>
+  /// Common components data.
+  /// </summary>
+  public Blackboard m_blackboard;
 
   /// <summary>
   /// Map of components in this node.
@@ -230,6 +275,6 @@ public class Actor<T>
   /// <summary>
   /// The wrapped node.
   /// </summary>
-  protected T _m_node;
+  protected T _m_node;  
 
 }

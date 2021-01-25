@@ -1,28 +1,5 @@
 ﻿public class Component<T>
-{
-
-  /// <summary>
-  /// Get the component identifier.
-  /// </summary>
-  /// <returns></returns>
-  virtual public COMPONENT_ID
-  GetID()
-  {
-
-    return COMPONENT_ID.kUndefined;
-
-  }
-
-  /// <summary>
-  /// Safely destroys this component.
-  /// </summary>
-  virtual public void
-  Destroy()
-  {
-
-    return;
-
-  }
+{ 
 
   /// <summary>
   /// 
@@ -101,18 +78,41 @@
   }
 
   /// <summary>
+  /// Get the component identifier.
+  /// </summary>
+  /// <returns></returns>
+  virtual public COMPONENT_ID
+  GetID()
+  {
+
+    return COMPONENT_ID.kUndefined;
+
+  }
+
+  /// <summary>
+  /// Safely destroys this component.
+  /// </summary>
+  virtual public void
+  Destroy()
+  {
+
+    return;
+
+  }
+
+  /// <summary>
   /// Set the composite node of this component.
   /// </summary>
-  /// <param name="_compositeNode"></param>
+  /// <param name="_actor"></param>
   public void
-  SetComponentManager(Actor<T> _compositeNode)
+  SetActor(Actor<T> _actor)
   {
 
     // Set the composite node.
-    _m_componentManager = _compositeNode;
+    _m_actor = _actor;
 
     // Set the node.
-    SetNode(_m_componentManager.GetNode());
+    SetNode(_m_actor.GetNode());
 
     return;
 
@@ -131,7 +131,7 @@
   /// <summary>
   /// The composite node of this component.
   /// </summary>
-  protected Actor<T> _m_componentManager;
+  protected Actor<T> _m_actor;
 
   /// <summary>
   /// The wrapped node in the composite node.

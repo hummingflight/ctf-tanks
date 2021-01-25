@@ -34,7 +34,40 @@ public enum COMPONENT_ID
   /// <summary>
   /// Undefined component.
   /// </summary>
-  kUndefined
+  kUndefined,
+
+  kTankInput,
+
+  kTankPhysics
+
+}
+
+public enum BLACKBOARD_ITEM
+{
+
+  kTank_Steering,
+
+  kAcceleration_Strength,
+
+  kReverse_Strength
+
+
+}
+
+public enum VARIABLE_TYPE
+{
+
+  kNumber,
+
+  kInt,
+
+  kFloat,
+
+  kString,
+
+  kVector2,
+
+  kVector3
 
 }
 
