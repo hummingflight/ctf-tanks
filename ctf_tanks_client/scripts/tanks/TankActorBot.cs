@@ -8,8 +8,8 @@ public class TankActorBot
   /* Public                                     */
   /**********************************************/
   
-  override public void
-  _Ready()
+  public TankActorBot()
+    : base()
   {
 
     // Create Actor
@@ -31,16 +31,28 @@ public class TankActorBot
     ////////////////////////////////////////////
     // Components
 
-    CmpTankProperties properties = new CmpTankProperties();
-
-    properties.m_teamKey = m_team;
-
-    _m_actor.AddComponent(properties);
+    _m_actor.AddComponent(new CmpTankProperties());
+    _m_actor.AddComponent(new CmpContactSensors());
     _m_actor.AddComponent(new CmpBehaviorTreeKinematic(TankBehaviorFactory.LIGHT_TANK()));
     _m_actor.AddComponent(new CmpTankPhysicsDebug());
 
+    return;
+
+  }
+
+  override public void
+  _Ready()
+  {
+
     ////////////////////////////////////////////
     // Teams
+
+    // Set properties
+
+    CmpTankProperties properties 
+      = _m_actor.GetComponent<CmpTankProperties>(COMPONENT_ID.kTankProperties);
+
+    properties.m_teamKey = m_team;
 
     MasterManager master = MasterManager.GetInstance();
 
@@ -98,6 +110,18 @@ public class TankActorBot
   /* Protected                                  */
   /**********************************************/
   
+  /// <summary>
+  /// Get the actor of this tank.
+  /// </summary>
+  public Actor<KinematicBody>
+  Actor
+  {
+    get
+    {
+      return _m_actor;
+    }
+  }
+
   protected Actor<KinematicBody> _m_actor;
 
 }

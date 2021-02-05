@@ -115,7 +115,9 @@ public enum COMPONENT_ID
 
   kTankPhysics,
 
-  kTankProperties
+  kTankProperties,
+
+  kContactSensors
 
 }
 

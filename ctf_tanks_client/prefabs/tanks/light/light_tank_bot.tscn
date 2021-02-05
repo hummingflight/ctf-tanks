@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scripts/tanks/TankActor.cs" type="Script" id=1]
-[ext_resource path="res://scripts/gdScripts/GD_DebugRayCast.cs" type="Script" id=2]
+[ext_resource path="res://scripts/gdScripts/GD_SensorRaycast.cs" type="Script" id=2]
 [ext_resource path="res://materials/tanks/light/LightTank.tres" type="Material" id=3]
 
 [sub_resource type="ArrayMesh" id=1]
@@ -75,13 +75,15 @@ transform = Transform( 1, 0, 0, 0, 0.2, 0, 0, 0, 1, 0, 0, 2.5 )
 enabled = true
 
 [node name="OA_RayCast_Left" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.81077, 2.13231, -2.88348 )
+transform = Transform( 0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, 0.939693, -2.81077, 2.13231, -2.88348 )
 enabled = true
-cast_to = Vector3( 0, 0, -10 )
+cast_to = Vector3( 0, 0, -5 )
 script = ExtResource( 2 )
+m_debug = true
 
 [node name="OA_RayCast_Right" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.81078, 2.13231, -2.88348 )
+transform = Transform( 0.939693, 0, -0.34202, 0, 1, 0, 0.34202, 0, 0.939693, 2.81078, 2.13231, -2.88348 )
 enabled = true
-cast_to = Vector3( 0, 0, -10 )
+cast_to = Vector3( 0, 0, -5 )
 script = ExtResource( 2 )
+m_debug = true

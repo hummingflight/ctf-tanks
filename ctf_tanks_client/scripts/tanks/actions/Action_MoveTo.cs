@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 public class Action_MoveTo
 : BehaviorNode
@@ -14,6 +15,8 @@ public class Action_MoveTo
     _m_v3DesireVelocity = new Vector3();
 
     _m_v3ToDestination = new Vector3();
+
+    _m_v3SteerForce = new Vector3();
 
     return;
 
@@ -37,6 +40,9 @@ public class Action_MoveTo
                           .m_blackboard
                           .GetItem<BItem_Path>(BLACKBOARD_ITEM.kPath);
 
+    // Debug Path.
+    //_DebugPath(pathItem.m_path);
+
     // Check failure conditions.
     if(pathItem.m_path == null)
     {
@@ -58,7 +64,12 @@ public class Action_MoveTo
       // Index out of range. Return Failed.
       return NODE_STATUS.kFailure;
 
-    }    
+    }
+
+    // Reset steer force.
+    _m_v3SteerForce.x = 0;
+    _m_v3SteerForce.y = 0;
+    _m_v3SteerForce.z = 0;
 
     // Get actor position
     Vector3 position = _actor.GetNode().Transform.origin;
@@ -111,6 +122,9 @@ public class Action_MoveTo
     CmpTankPhysics physics 
       = _actor.GetComponent<CmpTankPhysics>(COMPONENT_ID.kTankPhysics);
 
+    ////////////////////////////////////////////
+    // Seek to destination force
+
     // Calculate Seek Force
     Vector3 seekForce = SteerForce.Seek(physics.VELOCITY,
                                         physics.ENGINE_POWER,
@@ -118,11 +132,18 @@ public class Action_MoveTo
                                         physics.POSITION,
                                         100.0f);
 
-    Vector3 steerForce = new Vector3(seekForce);
+    ////////////////////////////////////////////
+    // Obstacle avoidance force.
+    _m_v3SteerForce += _GetCollisionAvoidanceForce(_actor,
+                                                   physics,
+                                                   100.0f);
+
+    // Add Seek force.
+    _m_v3SteerForce += seekForce;
 
     // Calculate desire velocity.
 
-    _m_v3DesireVelocity = steerForce + physics.VELOCITY;
+    _m_v3DesireVelocity = _m_v3SteerForce + physics.VELOCITY;
 
     _m_v3DesireVelocity = SVector3.MaxLengthLimit(ref _m_v3DesireVelocity, 
                                                   physics.ENGINE_POWER);
@@ -137,11 +158,11 @@ public class Action_MoveTo
       _actor.GetNode().Transform.origin + _m_v3DesireVelocity * 0.5f,
       new Color(1, 1, 0),
       2
-    );
+    );    
 
     // Update engine power
 
-    _UpdateEnginePower(_actor, physics, steerForce);
+    _UpdateEnginePower(_actor, physics, _m_v3SteerForce);
 
     // Update steering strength and direction.
 
@@ -206,12 +227,39 @@ public class Action_MoveTo
   /// <summary>
   /// 
   /// </summary>
-  private void
-  _UpdateCollisionAvoidance
-  ()
+  private Vector3
+  _GetCollisionAvoidanceForce
+  (
+    Actor<KinematicBody> _actor, 
+    CmpTankPhysics _physics,
+    float _force
+  )
   {
 
-    return;
+    Vector3 vAvoidanceForce = new Vector3();
+
+    if (_actor.HasComponent(COMPONENT_ID.kContactSensors))
+    {
+
+      CmpContactSensors contactSensor
+      = _actor.GetComponent<CmpContactSensors>(COMPONENT_ID.kContactSensors);
+
+      List<Vector3> aCollidersPosition = contactSensor.GetCollidersPosition();
+
+      foreach(Vector3 position in aCollidersPosition)
+      {
+
+        Vector3 vToTarget = position - _physics.POSITION;
+
+        Vector3 vProj = _physics.DIRECTION * (vToTarget.Dot(_physics.DIRECTION));
+
+        vAvoidanceForce += vToTarget.DirectionTo(vProj) * _force;
+
+      }
+
+    }
+
+    return vAvoidanceForce;
 
   }
 
@@ -257,11 +305,30 @@ public class Action_MoveTo
 
   }
 
+  private void 
+  _DebugPath(Vector3[] _path)
+  {
+
+    // Debug desire velocity.
+
+    MasterManager master = MasterManager.GetInstance();
+
+    master.DEBUG_MANAGER.DrawPath
+    (
+      _path,
+      new Color(0, 0, 0, 1),
+      2
+    );
+
+    return;
+
+  }
+
   private uint _m_nodeIndex;
 
-  /******************************************/
-  /*                                        */
-  /******************************************/
+  /**********************************************/
+  /* Physics                                    */
+  /**********************************************/
 
   /// <summary>
   /// Desire velocity vector.
@@ -272,5 +339,10 @@ public class Action_MoveTo
   /// Vector from tank position to destination.
   /// </summary>
   private Vector3 _m_v3ToDestination;
+
+  /// <summary>
+  /// 
+  /// </summary>
+  private Vector3 _m_v3SteerForce;
 
 }
