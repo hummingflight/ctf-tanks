@@ -1,0 +1,21 @@
+{
+
+  "key": "LightTank",
+
+  "enginePower": 120.0,
+
+  "reversePower": -150.0,
+
+  "steerAngle": 120.0,
+
+  "wheelBase": 5.0,
+
+  "steeringLimit": 10.0,
+
+  "gravity": -20.0,
+
+  "friction": -0.2,
+
+  "drag": -0.2
+
+}

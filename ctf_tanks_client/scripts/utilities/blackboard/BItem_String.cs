@@ -1,5 +1,5 @@
-﻿public class BlackboardStringItem
-: BlackboardItem
+﻿public class BItem_String
+: BItem
 {
 
   public override VARIABLE_TYPE 

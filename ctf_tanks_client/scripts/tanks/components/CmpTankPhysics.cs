@@ -1,12 +1,11 @@
 ﻿using Godot;
 
+/// <summary>
+/// Manage the group of motion forces that affects the tank velocity and position.
+/// </summary>
 public class CmpTankPhysics
   : Component<KinematicBody>
 {
-
-  // Declare member variables here. Examples:
-  // private int a = 2;
-  // private string b = "text";
 
   // Called when the node enters the scene tree for the first time.
   public override void
@@ -15,31 +14,23 @@ public class CmpTankPhysics
 
     // Initialize variables
 
-    m_acceleration = Vector3.Zero;
+    _m_v3Acceleration = Vector3.Zero;
 
-    m_velocity = Vector3.Zero;
+    _m_v3Velocity = Vector3.Zero;
 
-    m_frontWheelPosition = Vector3.Zero;
+    _m_v3FrontWheelPosition = Vector3.Zero;
 
-    m_rearWheelPosition = Vector3.Zero;
+    _m_v3RearWheelPosition = Vector3.Zero;
 
-    m_frictionForce = Vector3.Zero;
+    _m_v3GravityForce = Vector3.Zero;
 
-    m_dragForce = Vector3.Zero;
-
-    m_breakForce = Vector3.Zero;
-
-    m_gravityForce = Vector3.Zero;
-
-    m_steerAngle = 0.0f;
+    _m_steeringAngle = 0.0f;
 
     // Get Properties
 
     _m_frontRayCast = _m_node.GetNode<RayCast>("FrontRayCast");
 
     _m_rearRayCast = _m_node.GetNode<RayCast>("RearRayCast");
-
-    _m_torret = _m_node.GetNode<Spatial>("TankRoot/Cartoon_TL_Base/Turret");
 
     return;
 
@@ -53,55 +44,41 @@ public class CmpTankPhysics
   _PhysicsProcess(float delta)
   {
 
-    // Update steer
+    // Update steer angle.
     _UpdateSteer();
+
+    // Set acceleration to zero.
+
+    _m_v3Acceleration.x = 0.0f;
+    _m_v3Acceleration.y = 0.0f;
+    _m_v3Acceleration.z = 0.0f;
+
+    // Ground Forces.
 
     if (_m_node.IsOnFloor())
     {
 
-      // Update acceleration vector.
+      _UpdateEngineForce();
 
-      _UpdateAcceleration(delta);
+      _UpdateReverse();
 
-      // Update break force
-
-      _UpdateBreak(delta);
-
-      // Apply Acceleration and Break
-
-      m_velocity += (m_acceleration + m_breakForce) * delta;
-
-      // Update friction
-
-      _UpdateFriction();
-
-      // Update Drag
-
-      _UpdateDragForce();
-
-      // Apply Friction and Drag
-
-      m_velocity += (m_dragForce + m_frictionForce) * delta;
-
-      // Update steering vector.
-
-      _UpdateVelocity(delta);
+      _UpdateFriction();                 
 
     }
 
-    m_gravityForce.y = m_gravity * delta;
+    // Wind Force.
 
-    m_velocity += m_gravityForce;
+    _UpdateDragForce();
 
-    // Move Tank
+    // Gravity.
 
-    m_velocity = _m_node.MoveAndSlideWithSnap
-      (
-        m_velocity, 
-        -_m_node.Transform.basis.y, 
-        Vector3.Up, 
-        true
-      );
+    _UpdateGravity();
+
+    // Update velocity and position.
+
+    _UpdateVelocity(delta);
+
+    _UpdatePosition(delta);
 
     // Ramp
 
@@ -163,42 +140,11 @@ public class CmpTankPhysics
 
   }
 
-
-  float m_gravity = -20.0f;
-
-  float m_wheelBase = 5.0f;
-
-  float m_steeringLimit = 10.0f;
-
-  float m_enginePower = 200.0f;
-
-  float m_bracking = -150.0f;
-
-  float m_friction = -0.2f;
-
-  float m_drag = -0.2f;
-
-  float m_maxSpeedReverse = 3.0f;
-
-  float m_turretOpeningAngle = 1.57f;
-
-  Vector3 m_acceleration;
-
-  Vector3 m_breakForce;
-
-  Vector3 m_frictionForce;
-
-  Vector3 m_gravityForce;
-
-  Vector3 m_dragForce;
-
-  Vector3 m_velocity;
-
-  Vector3 m_rearWheelPosition;
-
-  Vector3 m_frontWheelPosition;
-
-  float m_steerAngle;
+  public override COMPONENT_ID 
+  GetID()
+  {
+    return COMPONENT_ID.kTankPhysics;
+  }
 
   /// <summary>
   /// 
@@ -207,17 +153,91 @@ public class CmpTankPhysics
   _UpdateSteer()
   {
 
-    BlackboardItem steerItem = _m_actor.m_blackboard.GetItem
+    BItem steerItem = _m_actor.m_blackboard.GetItem<BItem>
       (
         BLACKBOARD_ITEM.kTank_Steering
       );
 
-    m_steerAngle = steerItem.fValue * m_steeringLimit;
+    _m_steeringAngle = steerItem.fValue * _m_maxSteeringAngleOpening * 0.5f;
 
     return;
 
   }
 
+  /// <summary>
+  /// Update position of the tank. The position is updated according to the 
+  /// front wheel steering.
+  /// </summary>
+  /// <param name="_delta"></param>
+  private void
+  _UpdatePosition(float _delta)
+  {
+
+    // Get Wheels position.
+
+    Vector3 direction = -_m_node.Transform.basis.z;
+
+    float halfWheelBase = _m_wheelBase * 0.5f;
+
+    _m_v3RearWheelPosition = _m_node.Transform.origin - direction * halfWheelBase;
+    _m_v3FrontWheelPosition = _m_node.Transform.origin + direction * halfWheelBase;
+
+    // Move Wheels
+
+    _m_v3RearWheelPosition += _m_v3Velocity * _delta;
+    _m_v3FrontWheelPosition += _m_v3Velocity.Rotated
+    (
+      _m_node.Transform.basis.y.Normalized(), _m_steeringAngle
+    ) 
+    * _delta;
+
+    // Calculate the new direction
+
+    direction = _m_v3RearWheelPosition.DirectionTo(_m_v3FrontWheelPosition);
+
+    // Calculate the new velocity
+
+    if (direction.Dot(_m_v3Velocity) > 0)
+    {
+
+      float velocityMg = _m_v3Velocity.Length();
+
+      _m_v3Velocity.x = direction.x * velocityMg;
+      _m_v3Velocity.y = direction.y * velocityMg;
+      _m_v3Velocity.z = direction.z * velocityMg;
+
+    }
+    else
+    {
+
+      float velocityMg = -_m_v3Velocity.Length();
+
+      _m_v3Velocity.x = direction.x * velocityMg;
+      _m_v3Velocity.y = direction.y * velocityMg;
+      _m_v3Velocity.z = direction.z * velocityMg;
+
+    }
+
+    // Rotate
+
+    _m_node.LookAt
+    (
+      _m_node.Transform.origin + direction,
+      _m_node.Transform.basis.y
+    );
+
+    // Move Tank
+    _m_v3Velocity = _m_node.MoveAndSlideWithSnap
+    (
+      _m_v3Velocity,
+      -_m_node.Transform.basis.y,
+      Vector3.Up,
+      true
+    );
+
+    return;
+
+  }
 
   /// <summary>
   /// Calculates the steering of the car.
@@ -227,122 +247,109 @@ public class CmpTankPhysics
   _UpdateVelocity(float _delta)
   {
 
-    // Get Wheels position.
-
-    Vector3 direction = -_m_node.Transform.basis.z;
-    float halfWheelBase = m_wheelBase * 0.5f;
-
-    m_rearWheelPosition = _m_node.Transform.origin - direction * halfWheelBase;
-    m_frontWheelPosition = _m_node.Transform.origin + direction * halfWheelBase;
-
-    // Move Wheels
-
-    m_rearWheelPosition += m_velocity * _delta;
-    m_frontWheelPosition += m_velocity.Rotated
-      (
-      _m_node.Transform.basis.y.Normalized(), m_steerAngle
-      ) * _delta;
-
-    // Calculate the new direction
-
-    direction = m_rearWheelPosition.DirectionTo(m_frontWheelPosition);
-
-    // Calculate the new velocity
-
-    if (direction.Dot(m_velocity) > 0)
-    {
-
-      m_velocity = direction * m_velocity.Length();
-
-    }
-    else
-    {
-
-      m_velocity = direction * -m_velocity.Length();
-
-    }
-
-
-
-    // Rotate
-
-    _m_node.LookAt
-      (
-        _m_node.Transform.origin + direction, 
-        _m_node.Transform.basis.y
-      );
+    _m_v3Velocity += _m_v3Acceleration * _delta;    
 
     return;
 
   }
 
+  /// <summary>
+  /// Add engine force to the tank's acceleration.
+  /// </summary>
   private void
-  _UpdateAcceleration(float _deltaTime)
+  _UpdateEngineForce()
   {
-    
+
     // Get acceleration strength from blackboard.
-    BlackboardItem accelerationStrength = _m_actor.m_blackboard.GetItem
+    BItem accelerationStrength = _m_actor.m_blackboard.GetItem<BItem>
       (
         BLACKBOARD_ITEM.kAcceleration_Strength
       );
 
     // Set acceleration vector.
-    m_acceleration = -_m_node.Transform.basis.z * 
-                     m_enginePower * 
-                     accelerationStrength.fValue;
+    _m_v3Acceleration -= _m_node.Transform.basis.z *
+                       _m_enginePower *
+                       accelerationStrength.fValue;
 
     return;
 
   }
 
+  /// <summary>
+  /// Add reverse force to the tank's acceleration.
+  /// </summary>
   private void
-  _UpdateBreak(float _delta)
+  _UpdateReverse()
   {
 
     // Get acceleration strength from blackboard.
-    BlackboardItem reverseStrength = _m_actor.m_blackboard.GetItem
+    BItem reverseStrength = _m_actor.m_blackboard.GetItem<BItem>
       (
         BLACKBOARD_ITEM.kReverse_Strength
       );
 
-    // Set reverse vector.
-    m_breakForce = -_m_node.Transform.basis.z * 
-                   reverseStrength.fValue * 
-                   m_bracking;
+    // Add reverse force to the acceleration.
+    _m_v3Acceleration += _m_node.Transform.basis.z 
+                        * reverseStrength.fValue 
+                        * _m_reversePower;
 
     return;
 
   }
 
+  /// <summary>
+  /// Add gravity force to the tank's acceleration.
+  /// </summary>
+  private void
+  _UpdateGravity()
+  {
+
+    _m_v3GravityForce.y = -_m_gravity;
+    _m_v3Acceleration += _m_v3GravityForce;
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Add friction force to the tank's acceleration.
+  /// </summary>
   private void
   _UpdateFriction()
   {
 
-    m_frictionForce.x = m_velocity.x * m_friction;
-    m_frictionForce.y = m_velocity.y * m_friction;
-    m_frictionForce.z = m_velocity.z * m_friction;
+    _m_v3Acceleration.x -= _m_v3Velocity.x * _m_friction;
+    _m_v3Acceleration.y -= _m_v3Velocity.y * _m_friction;
+    _m_v3Acceleration.z -= _m_v3Velocity.z * _m_friction;
 
     return;
 
   }
 
+  /// <summary>
+  /// Add Drag to the tank's acceleration.
+  /// </summary>
   private void
   _UpdateDragForce()
   {
 
-    float speed = m_velocity.Length();
-    float dragMultiplier = speed * m_drag;
+    float speed = _m_v3Velocity.Length();
+    float dragMultiplier = speed * _m_drag;
 
-    m_dragForce.x = m_velocity.x * dragMultiplier;
-    m_dragForce.y = m_velocity.y * dragMultiplier;
-    m_dragForce.z = m_velocity.z * dragMultiplier;
+    _m_v3Acceleration.x -= _m_v3Velocity.x * dragMultiplier;
+    _m_v3Acceleration.y -= _m_v3Velocity.y * dragMultiplier;
+    _m_v3Acceleration.z -= _m_v3Velocity.z * dragMultiplier;
 
     return;
 
   }
 
-
-
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="_transform"></param>
+  /// <param name="_AxisY"></param>
+  /// <returns></returns>
   private Transform
   _AlignWithY(Transform _transform, Vector3 _AxisY)
   {
@@ -355,10 +362,208 @@ public class CmpTankPhysics
 
   }
 
-  private RayCast _m_frontRayCast;
+  public Vector3
+  POSITION
+  {
+    get
+    {
+      return _m_node.Transform.origin;
+    }
+  }
 
-  private RayCast _m_rearRayCast;
+  /// <summary>
+  /// Get the velocity of the tank.
+  /// </summary>
+  public Vector3
+  VELOCITY
+  {
+    get
+    {
+      return _m_v3Velocity;
+    }
+  }
 
-  private Spatial _m_torret;
+  /// <summary>
+  /// Get the direction of the tank.
+  /// </summary>
+  public Vector3
+  DIRECTION
+  {
+    get
+    {
+      return -_m_node.Transform.basis.z;
+    }
+  }
+
+  /// <summary>
+  /// Get the Normal vector of the Direction vector.
+  /// </summary>
+  public Vector3
+  NORMAL_DIRECTION
+  {
+    get
+    {
+      return _m_node.Transform.basis.x;
+    }
+  }
+
+  /// <summary>
+  /// Get the maximum engine power.
+  /// </summary>
+  public float
+  ENGINE_POWER
+  {
+    get
+    {
+      return _m_enginePower;
+    }
+  }
+
+  /// <summary>
+  /// Get the maximum reverse power.
+  /// </summary>
+  public float
+  REVERSE_POWER
+  {
+    get 
+    {
+      return _m_reversePower;
+    }
+  }
+
+  /// <summary>
+  /// Get the friction coefficient.
+  /// </summary>
+  public float
+  FRICTION_COEFFICIENT
+  {
+    get
+    {
+      return _m_friction;
+    }
+  }
+
+  /// <summary>
+  /// Get the drag coefficient.
+  /// </summary>
+  public float
+  DRAG_COEFFICIENT
+  {
+    get
+    {
+      return _m_drag;
+    }
+  }
+
+  /// <summary>
+  /// Get the actual steering angle of the wheels.
+  /// </summary>
+  public float
+  STEERING_ANGLE
+  {
+    get
+    {
+      return _m_steeringAngle;
+    }
+  }
+
+  /// <summary>
+  /// Get the maximum steering angle opening of the wheels.
+  /// </summary>
+  public float
+  MAX_STEERING_ANGLE_OPENING
+  {
+    get
+    {
+      return _m_maxSteeringAngleOpening;
+    }
+  }
+
+  /// <summary>
+  /// Rate of change of the tank position.
+  /// </summary>
+  protected Vector3 _m_v3Velocity;
+
+  /// <summary>
+  /// Rate of change of the tank velocity.
+  /// </summary>
+  protected Vector3 _m_v3Acceleration;
+
+  /******************************************/
+  /* Forces                                 */
+  /******************************************/
+
+  /// <summary>
+  /// Gravity force magnitude.
+  /// </summary>
+  protected float _m_gravity = 20.0f;
+
+  /// <summary>
+  /// Engine force maximum magnitude.
+  /// </summary>
+  protected float _m_enginePower = 15.0f;
+
+  /// <summary>
+  /// Reverse force maximum magnitude.
+  /// </summary>
+  protected float _m_reversePower = 15.0f;
+
+  /// <summary>
+  /// Friction coefficient.
+  /// </summary>
+  protected float _m_friction = 0.5f;
+
+  /// <summary>
+  /// Drag coefficient.
+  /// </summary>
+  protected float _m_drag = 0.5f;
+
+  /// <summary>
+  /// Gravity force.
+  /// </summary>
+  protected Vector3 _m_v3GravityForce;
+
+  /******************************************/
+  /* Wheel Position                         */
+  /******************************************/
+
+  /// <summary>
+  /// Distance between the front and rear wheel.
+  /// </summary>
+  protected float _m_wheelBase = 5.0f;
+
+  /// <summary>
+  /// Rear wheel position.
+  /// </summary>
+  protected Vector3 _m_v3RearWheelPosition;
+
+  /// <summary>
+  /// Front wheel position.
+  /// </summary>
+  protected Vector3 _m_v3FrontWheelPosition;
+
+  /******************************************/
+  /* Wheel Steering                         */
+  /******************************************/
+
+  /// <summary>
+  /// Maximum steering angle opening.
+  /// </summary>
+  protected float _m_maxSteeringAngleOpening = 1.5f;
+
+  /// <summary>
+  /// Actual steering angle.
+  /// </summary>
+  protected float _m_steeringAngle;
+
+  /// <summary>
+  /// 
+  /// </summary>
+  protected RayCast _m_frontRayCast;
+
+  /// <summary>
+  /// 
+  /// </summary>
+  protected RayCast _m_rearRayCast;
 
 }

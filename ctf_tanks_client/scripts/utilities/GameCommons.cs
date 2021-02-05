@@ -1,9 +1,61 @@
-﻿public enum GAME_MANAGER
+﻿using Godot;
+
+public enum MANAGER_KEY
 {
 
   kUndefined = 0,
 
-  kConnectionManager
+  kGameManager,
+
+  kDebugManager,
+
+  kCameraManager
+
+}
+
+public enum TEAM_KEY
+{
+
+  kRed,
+
+  kBlue
+
+}
+
+public enum NODE_STATUS
+{
+
+  kInvalid,
+
+  kSucess,
+
+  kFailure,
+
+  kRunning,
+
+  kAborted
+
+}
+
+public enum OPERATION_POLICY
+{
+
+  KRequiereOne,
+
+  kRequireAll
+
+}
+
+public enum BT_ACTION
+{
+
+  kCourse_Towards_Enemy_Base,
+
+  kGet_Navigation_Mesh,
+
+  kGet_Path_To_Destination,
+
+  kMove_To  
 
 }
 
@@ -28,6 +80,29 @@ public enum OPERATION_RESULT
 
 }
 
+public enum BTBCMD_KEY
+{
+
+  kEnd,
+
+  kReturn,
+
+  kComposite,
+
+  kSequence,
+
+  kSelector,
+
+  kActiveSelector,
+
+  kParallel,
+
+  kRepeat,
+
+  kAction
+
+}
+
 public enum COMPONENT_ID
 {
 
@@ -38,7 +113,9 @@ public enum COMPONENT_ID
 
   kTankInput,
 
-  kTankPhysics
+  kTankPhysics,
+
+  kTankProperties
 
 }
 
@@ -49,8 +126,15 @@ public enum BLACKBOARD_ITEM
 
   kAcceleration_Strength,
 
-  kReverse_Strength
+  kReverse_Strength,
 
+  kFire_Button,
+
+  kDestination,
+
+  kPath,
+
+  kNavigation
 
 }
 
@@ -67,11 +151,26 @@ public enum VARIABLE_TYPE
 
   kVector2,
 
-  kVector3
+  kVector3,
+
+  kPath,
+
+  kNavigationMesh
 
 }
 
 public enum MESSAGE_ID
 {
+
+  KActive_Camera
+
+}
+
+public enum CAMERA_MANAGER_STATE
+{
+
+  KTop_orthographic,
+
+  kBehind_active_tank
 
 }

@@ -16,12 +16,18 @@ public class TankActor
 
     Blackboard blackboard = _m_actor.m_blackboard;
 
-    blackboard.AddItem(BLACKBOARD_ITEM.kTank_Steering, new BlackboardItem());
-    blackboard.AddItem(BLACKBOARD_ITEM.kAcceleration_Strength, new BlackboardItem());
-    blackboard.AddItem(BLACKBOARD_ITEM.kReverse_Strength, new BlackboardItem());
+    blackboard.AddItem(BLACKBOARD_ITEM.kTank_Steering, new BItem());
+    blackboard.AddItem(BLACKBOARD_ITEM.kAcceleration_Strength, new BItem());
+    blackboard.AddItem(BLACKBOARD_ITEM.kReverse_Strength, new BItem());
+    blackboard.AddItem(BLACKBOARD_ITEM.kFire_Button, new BItem());
 
     // Create Component
 
+    CmpTankProperties properties = new CmpTankProperties();
+
+    properties.m_teamKey = m_team;
+
+    _m_actor.AddComponent(properties);
     _m_actor.AddComponent(new CmpTankInput());
     _m_actor.AddComponent(new CmpTankPhysics());
 
@@ -52,6 +58,9 @@ public class TankActor
     return;
 
   }
+
+  [Export]
+  public TEAM_KEY m_team;
 
   protected Actor<KinematicBody> _m_actor;
 

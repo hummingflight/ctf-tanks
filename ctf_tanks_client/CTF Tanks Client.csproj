@@ -4,9 +4,9 @@
     <RootNamespace>CTFTanksClient</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
+    <Content Include="scripts\config\tanks\LightTankConfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="scripts\Managers\Master\" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 </Project>

@@ -8,14 +8,14 @@ public class Blackboard
   {
 
     // Create table of values.
-    _m_hItems = new Dictionary<BLACKBOARD_ITEM, BlackboardItem>();
+    _m_hItems = new Dictionary<BLACKBOARD_ITEM, BItem>();
 
     return;
 
   }
 
   public OPERATION_RESULT
-  AddItem(BLACKBOARD_ITEM _key, BlackboardItem _item)
+  AddItem(BLACKBOARD_ITEM _key, BItem _item)
   {
 
     if(!HasItem(_key))
@@ -37,14 +37,15 @@ public class Blackboard
 
   }
 
-  public BlackboardItem
-  GetItem(BLACKBOARD_ITEM _key)
+  public T
+  GetItem<T>(BLACKBOARD_ITEM _key)
+  where T : BItem
   {
 
     if(HasItem(_key))
     {
 
-      return _m_hItems[_key];
+      return _m_hItems[_key] as T;
 
     }
     else
@@ -62,7 +63,7 @@ public class Blackboard
   RemoveAndDestroyItem(BLACKBOARD_ITEM _key)
   {
 
-    BlackboardItem item = RemoveItem(_key);
+    BItem item = RemoveItem(_key);
 
     if(item != null)
     {
@@ -81,11 +82,11 @@ public class Blackboard
 
   }
 
-  public BlackboardItem
+  public BItem
   RemoveItem(BLACKBOARD_ITEM _key)
   {
 
-    BlackboardItem item = GetItem(_key);
+    BItem item = GetItem<BItem>(_key);
 
     if(item != null)
     {
@@ -128,6 +129,6 @@ public class Blackboard
 
   }
 
-  private Dictionary<BLACKBOARD_ITEM, BlackboardItem> _m_hItems;
+  private Dictionary<BLACKBOARD_ITEM, BItem> _m_hItems;
 
 }

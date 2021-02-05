@@ -16,33 +16,13 @@ public class CmpTankInput
   _Process(float _delta)
   {
 
-    // Get the steer value
+    _UpdateInputSteering();
 
-    float steerValue = Input.GetActionStrength(_m_steerRightKey)
-                     - Input.GetActionStrength(_m_steerLeftKey);
+    _UpdateInputAcceleration();
 
-    BlackboardItem tankSteeringItem =
-      _m_actor.m_blackboard.GetItem(BLACKBOARD_ITEM.kTank_Steering);
+    _UpdateInputReverse();
 
-    tankSteeringItem.fValue = steerValue;
-
-    // Get the acceleration value
-
-    float acceleration = Input.GetActionStrength(_m_accelerationKey);
-
-    BlackboardItem accelerationItem =
-      _m_actor.m_blackboard.GetItem(BLACKBOARD_ITEM.kAcceleration_Strength);
-
-    accelerationItem.fValue = acceleration;
-
-    // Get the reverse value
-
-    float reverse = Input.GetActionStrength(_m_reverseKey);
-
-    BlackboardItem breakItem =
-      _m_actor.m_blackboard.GetItem(BLACKBOARD_ITEM.kReverse_Strength);
-
-    breakItem.fValue = reverse;
+    _UpdateInputFire();
 
     return;
   
@@ -60,6 +40,65 @@ public class CmpTankInput
 
   }
 
+  private void
+  _UpdateInputFire()
+  {
+
+    BItem firebutton =
+      _m_actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kFire_Button);
+
+    firebutton.iValue = (Input.IsActionPressed(_m_fireKey) ? 1 : 0);
+
+    return;
+
+  }
+
+  private void
+  _UpdateInputAcceleration()
+  {
+
+    // Get the acceleration value
+
+    BItem accelerationItem =
+      _m_actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kAcceleration_Strength);
+
+    accelerationItem.fValue = Input.GetActionStrength(_m_accelerationKey);
+
+    return;
+
+  }
+
+  private void
+  _UpdateInputSteering()
+  {
+
+    BItem tankSteeringItem =
+      _m_actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kTank_Steering);
+
+    tankSteeringItem.fValue = Input.GetActionStrength(_m_steerRightKey)
+                            - Input.GetActionStrength(_m_steerLeftKey);
+
+    return;
+
+  }
+
+  private void
+  _UpdateInputReverse()
+  {
+
+    // Get the reverse value
+
+    float reverse = Input.GetActionStrength(_m_reverseKey);
+
+    BItem breakItem =
+      _m_actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kReverse_Strength);
+
+    breakItem.fValue = reverse;
+
+    return;
+
+  }
+
   private string _m_steerRightKey = "steer_right";
 
   private string _m_steerLeftKey = "steer_left";
@@ -67,5 +106,7 @@ public class CmpTankInput
   private string _m_accelerationKey = "accelerate";
 
   private string _m_reverseKey = "reverse";
+
+  private string _m_fireKey = "fire";
 
 }

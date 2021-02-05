@@ -1,10 +1,10 @@
 ﻿using Godot;
 
-public class BlackboardVector3Item
-: BlackboardItem
+public class BItem_Vector3
+: BItem
 {
 
-  public BlackboardVector3Item()
+  public BItem_Vector3()
   {
 
     v3Value = new Vector3();
