@@ -40,25 +40,27 @@ public class Action_MoveTo
                           .m_blackboard
                           .GetItem<BItem_Path>(BLACKBOARD_ITEM.kPath);
 
+    ActiveItemVector<CTF.PathNode> path = pathItem.m_vectorPathNode;
+
     // Debug Path.
-    //_DebugPath(pathItem.m_path);
+    _DebugPath(path);
 
     // Check failure conditions.
-    if(pathItem.m_path == null)
+    if(path == null)
     {
 
       // No path at all.
       return NODE_STATUS.kFailure;
 
     }
-    else if(pathItem.m_path.Length == 0)
+    else if(path.SIZE == 0)
     {
 
       // Invalid path.
       return NODE_STATUS.kFailure;
 
     }
-    else if(!IsSafeIndex(_m_nodeIndex, pathItem.m_path))
+    else if(path.ACTIVE == path.END )
     {
 
       // Index out of range. Return Failed.
@@ -75,7 +77,7 @@ public class Action_MoveTo
     Vector3 position = _actor.GetNode().Transform.origin;
 
     // Get destination position.
-    Vector3 destination = pathItem.m_path[_m_nodeIndex];
+    Vector3 destination = path.ACTIVE.m_item.position;
     
     // Fix destination height.
     destination.y = position.y;
@@ -90,13 +92,15 @@ public class Action_MoveTo
     {
 
       // Next node.
-      if(IsSafeIndex(++_m_nodeIndex, pathItem.m_path))
+      path.Next();
+
+      if(path.ACTIVE != path.END)
       {
 
-        GD.Print("Active Node Index: " + _m_nodeIndex);
+        GD.Print("Active Node Index: " + ++_m_nodeIndex);
 
         // Get new destination.
-        destination = pathItem.m_path[_m_nodeIndex];
+        destination = path.ACTIVE.m_item.position;
 
         // Fix destination height.
         destination.y = position.y;
@@ -126,10 +130,18 @@ public class Action_MoveTo
     // Seek to destination force
 
     // Calculate Seek Force
-    Vector3 seekForce = SteerForce.Seek(physics.VELOCITY,
+    /*
+    _m_v3SteerForce += SteerForce.Seek(physics.VELOCITY,
                                         physics.ENGINE_POWER,
                                         destination,
                                         physics.POSITION,
+                                        100.0f);
+    */
+
+    _m_v3SteerForce += SteerForce.Arrive(physics.VELOCITY,
+                                        destination,
+                                        physics.POSITION,
+                                        30.0f,
                                         100.0f);
 
     ////////////////////////////////////////////
@@ -137,9 +149,6 @@ public class Action_MoveTo
     _m_v3SteerForce += _GetCollisionAvoidanceForce(_actor,
                                                    physics,
                                                    100.0f);
-
-    // Add Seek force.
-    _m_v3SteerForce += seekForce;
 
     // Calculate desire velocity.
 
@@ -155,7 +164,7 @@ public class Action_MoveTo
     master.DEBUG_MANAGER.DrawLine
     (
       _actor.GetNode().Transform.origin,
-      _actor.GetNode().Transform.origin + _m_v3DesireVelocity * 0.5f,
+      _actor.GetNode().Transform.origin + _m_v3DesireVelocity,
       new Color(1, 1, 0),
       2
     );    
@@ -163,6 +172,10 @@ public class Action_MoveTo
     // Update engine power
 
     _UpdateEnginePower(_actor, physics, _m_v3SteerForce);
+
+    // Update reverse power
+
+    //_UpdateReversePower(_actor, physics, _m_v3DesireVelocity);
 
     // Update steering strength and direction.
 
@@ -218,7 +231,37 @@ public class Action_MoveTo
     BItem itemAccStrength =
       _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kAcceleration_Strength);
 
-    itemAccStrength.fValue = engineStrength;
+    itemAccStrength.fValue = 1.0f;
+
+    return;
+
+  }
+
+  private void
+  _UpdateReversePower
+  (
+    Actor<KinematicBody> _actor,
+    CmpTankPhysics _physics,
+    Vector3 _desireVelocity
+  )
+  {
+
+    float actualSpeed = _physics.VELOCITY.Length();
+    float desireSpeed = _desireVelocity.Length();
+
+    float reverseStrength = 0;
+
+    if(actualSpeed > 0.001f)
+    {
+
+      reverseStrength = Mathf.Clamp(1.0f - (desireSpeed / actualSpeed), 0.0f, 1.0f);
+
+    }
+
+    BItem itemReverseStrength =
+     _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kReverse_Strength);
+
+    itemReverseStrength.fValue = reverseStrength;
 
     return;
 
@@ -306,7 +349,7 @@ public class Action_MoveTo
   }
 
   private void 
-  _DebugPath(Vector3[] _path)
+  _DebugPath(ActiveItemVector<CTF.PathNode> _path)
   {
 
     // Debug desire velocity.

@@ -1,6 +1,10 @@
 ﻿public class ItemVector <T> where T : class
 {
 
+  /**********************************************/
+  /* Public                                     */
+  /**********************************************/
+  
   public ItemVector()
   {
 
@@ -11,6 +15,28 @@
     _m_end.SetPrevious(_m_start);
 
     _m_size = 0;
+
+    return;
+
+  }
+
+  public ItemVector(T[] _itemArray)
+  {
+
+    _m_start = new ItemVectorNode<T>(default);
+    _m_end = new ItemVectorNode<T>(default);
+
+    _m_start.SetNext(_m_end);
+    _m_end.SetPrevious(_m_start);
+
+    _m_size = 0;
+
+    foreach (T item in _itemArray)
+    {
+
+      AddAtEnd(item);  
+
+    }
 
     return;
 
@@ -210,10 +236,14 @@
 
   }
 
-  private ItemVectorNode<T> _m_start;
+  /**********************************************/
+  /* Protected                                  */
+  /**********************************************/
+  
+  protected ItemVectorNode<T> _m_start;
 
-  private ItemVectorNode<T> _m_end;
+  protected ItemVectorNode<T> _m_end;
 
-  private int _m_size;
+  protected int _m_size;
 
 }

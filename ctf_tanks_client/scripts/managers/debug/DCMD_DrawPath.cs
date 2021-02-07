@@ -7,19 +7,27 @@ public class DCMD_DrawPath
   public DCMD_DrawPath
   (
     DebugManager _debugManager,
-    Vector3[] _aPositions, 
+    ActiveItemVector<CTF.PathNode> _path, 
     Color _color, 
     float _width
   )
   {
 
-    // Get Unprojected Positions.
-    Vector2[] points = new Vector2[_aPositions.Length];
+    int pathSize = _path.SIZE;
 
-    for (int i = 0; i < _aPositions.Length; ++i)
+    // Get Unprojected Positions.
+    Vector2[] points = new Vector2[pathSize];
+
+    ItemVectorNode<CTF.PathNode> item = _path.GetFirst();
+    int i = 0;
+
+    while(item != _path.END)
     {
 
-      points[i] = _debugManager.DEBUG_CAMERA.UnprojectPosition(_aPositions[i]);     
+      points[i] = _debugManager.DEBUG_CAMERA.UnprojectPosition(item.m_item.position);
+
+      item = item.GetNext();
+      ++i;
 
     }
 
@@ -42,7 +50,7 @@ public class DCMD_DrawPath
     foreach(Vector2 point in _m_aPositions)
     {
 
-      _canvas.DrawCircle(point, _m_width * 0.75f, _m_color);
+      _canvas.DrawCircle(point, _m_width * 1.5f, _m_color);
 
     }
 

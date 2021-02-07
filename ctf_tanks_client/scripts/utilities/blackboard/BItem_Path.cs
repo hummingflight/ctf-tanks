@@ -12,6 +12,6 @@ public class BItem_Path
 
   }
 
-  public Vector3[] m_path;
+  public ActiveItemVector<CTF.PathNode> m_vectorPathNode;
 
 }

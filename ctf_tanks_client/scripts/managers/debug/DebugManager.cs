@@ -63,13 +63,6 @@ public class DebugManager
       _m_commands.Enqueue((_debugCommand));
 
     }
-    else
-    {
-
-      GD.Print("Maximum number of commands in the same frame reached. " +
-              "Command will be ignored.");
-
-    }
 
     return;
 
@@ -109,13 +102,13 @@ public class DebugManager
   public void
   DrawPath
   (
-    Vector3[] _aPositions, 
+    ActiveItemVector<CTF.PathNode> _path, 
     Color _color, 
     float _width
   )
   {
 
-    AddCommand(new DCMD_DrawPath(this, _aPositions, _color, _width));
+    AddCommand(new DCMD_DrawPath(this, _path, _color, _width));
 
     return;
 
