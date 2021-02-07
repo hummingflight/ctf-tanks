@@ -51,18 +51,20 @@ public class CmpTankPhysics
 
     _m_v3Acceleration.x = 0.0f;
     _m_v3Acceleration.y = 0.0f;
-    _m_v3Acceleration.z = 0.0f;
+    _m_v3Acceleration.z = 0.0f;   
 
-    // Ground Forces.
+    // Floor forces.
 
-    if (_m_node.IsOnFloor())
+    bool isOnFloor = _m_node.IsOnFloor();
+
+    if (isOnFloor)
     {
 
       _UpdateEngineForce();
 
       _UpdateReverse();
 
-      _UpdateFriction();                 
+      _UpdateFriction();        
 
     }
 
@@ -78,9 +80,17 @@ public class CmpTankPhysics
 
     _UpdateVelocity(delta);
 
+    if(isOnFloor)
+    {
+
+      _UpdateTankSteering(delta);
+
+    }
+
     _UpdatePosition(delta);
 
     // Ramp
+    /*
 
     if (_m_frontRayCast.IsColliding() || _m_rearRayCast.IsColliding())
     {
@@ -134,7 +144,7 @@ public class CmpTankPhysics
 
       _m_node.GlobalTransform = _m_node.GlobalTransform.InterpolateWith(xForm, 0.1f);
 
-    }
+    }*/
 
     return;
 
@@ -149,28 +159,9 @@ public class CmpTankPhysics
   /// <summary>
   /// 
   /// </summary>
-  private void
-  _UpdateSteer()
-  {
-
-    BItem steerItem = _m_actor.m_blackboard.GetItem<BItem>
-      (
-        BLACKBOARD_ITEM.kTank_Steering
-      );
-
-    _m_steeringAngle = steerItem.fValue * _m_maxSteeringAngleOpening * 0.5f;
-
-    return;
-
-  }
-
-  /// <summary>
-  /// Update position of the tank. The position is updated according to the 
-  /// front wheel steering.
-  /// </summary>
   /// <param name="_delta"></param>
   private void
-  _UpdatePosition(float _delta)
+  _UpdateTankSteering(float _delta)
   {
 
     // Get Wheels position.
@@ -182,13 +173,11 @@ public class CmpTankPhysics
     _m_v3RearWheelPosition = _m_node.Transform.origin - direction * halfWheelBase;
     _m_v3FrontWheelPosition = _m_node.Transform.origin + direction * halfWheelBase;
 
-    // Move Wheels
-
     _m_v3RearWheelPosition += _m_v3Velocity * _delta;
     _m_v3FrontWheelPosition += _m_v3Velocity.Rotated
     (
       _m_node.Transform.basis.y.Normalized(), _m_steeringAngle
-    ) 
+    )
     * _delta;
 
     // Calculate the new direction
@@ -226,7 +215,39 @@ public class CmpTankPhysics
       _m_node.Transform.basis.y
     );
 
+    return;
+
+  }
+
+  /// <summary>
+  /// 
+  /// </summary>
+  private void
+  _UpdateSteer()
+  {
+
+    BItem steerItem = _m_actor.m_blackboard.GetItem<BItem>
+      (
+        BLACKBOARD_ITEM.kTank_Steering
+      );
+
+    _m_steeringAngle = steerItem.fValue * _m_maxSteeringAngleOpening * 0.5f;
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Update position of the tank. The position is updated according to the 
+  /// front wheel steering.
+  /// </summary>
+  /// <param name="_delta"></param>
+  private void
+  _UpdatePosition(float _delta)
+  {   
+
     // Move Tank
+
     _m_v3Velocity = _m_node.MoveAndSlideWithSnap
     (
       _m_v3Velocity,
@@ -235,6 +256,13 @@ public class CmpTankPhysics
       true
     );
 
+    /*
+    _m_v3Velocity = _m_node.MoveAndSlide
+    (
+      _m_v3Velocity,
+      _m_node.Transform.basis.y
+    );
+    */
     return;
 
   }
