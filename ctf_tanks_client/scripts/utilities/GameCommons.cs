@@ -51,11 +51,11 @@ public enum BT_ACTION
 
   kCourse_Towards_Enemy_Base,
 
-  kGet_Navigation_Mesh,
-
   kGet_Path_To_Destination,
 
-  kMove_To  
+  kMove_To,
+
+  kIs_Path_Node_In_DeadZone
 
 }
 
