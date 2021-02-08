@@ -23,9 +23,6 @@ public class BTBCMD_Action
       case BT_ACTION.kCourse_Towards_Enemy_Base:
         return new Action_CourseTowardsEnemyBase();
 
-      case BT_ACTION.kGet_Navigation_Mesh:
-        return new Action_GetNavigationMesh();
-
       case BT_ACTION.kGet_Path_To_Destination:
         return new Action_GetPathToDestination();
 
