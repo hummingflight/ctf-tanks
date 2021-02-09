@@ -64,7 +64,9 @@ public class CmpTankPhysics
 
       _UpdateReverse();
 
-      _UpdateFriction();        
+      _UpdateFriction();
+
+      _m_v3Acceleration.y += _m_gravity;
 
     }
 
