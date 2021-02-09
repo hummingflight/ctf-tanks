@@ -20,7 +20,10 @@
                       .Action(BT_ACTION.kStop)
                       .Action(BT_ACTION.kReverse_Alignment)
                       .Return()
-                    .Action(BT_ACTION.kMove_To)
+                    .Sequence()
+                      .Action(BT_ACTION.kMove_To)
+                      .Action(BT_ACTION.kStop)
+                      .Return()
                     .Return()
                   .Return()
                 .Build();

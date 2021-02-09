@@ -70,13 +70,13 @@ public class CmpTankPhysics
 
     }
 
-    // Wind Force.
-
-    _UpdateDragForce();
-
     // Gravity.
 
     _UpdateGravity();
+
+    // Wind Force.
+
+    _UpdateDragForce();
 
     // Update velocity and position.
 

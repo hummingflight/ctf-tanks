@@ -34,12 +34,18 @@ public class Action_Stop
 
     }
     else
-    { 
+    {
 
       if (speed < -0.01f) // True if tank is in reverse.
       {
 
-        accStrength.fValue = -speed / physics.ENGINE_POWER;
+        accStrength.fValue = Mathf.Min(-speed, 1.0f);
+
+      }
+      else // Tank is forward
+      {
+
+        reverseStrength.fValue = Mathf.Min(speed, 1.0f);
 
       }
 

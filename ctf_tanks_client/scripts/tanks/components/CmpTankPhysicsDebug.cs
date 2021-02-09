@@ -79,7 +79,7 @@ public class CmpTankPhysicsDebug
   _DebugAcceleration()
   {
 
-    if (_m_v3Acceleration.Length() > 0)
+    if (_m_v3Acceleration.Length() > 0.01f)
     {
 
       _m_debugManager.DrawLine
