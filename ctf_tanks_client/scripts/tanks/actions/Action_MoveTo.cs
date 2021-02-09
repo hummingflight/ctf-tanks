@@ -116,7 +116,7 @@ public class Action_MoveTo
       {
 
         // Last position reached. Return success.
-        return NODE_STATUS.kSucess;
+        return NODE_STATUS.kSuccess;
 
       }
 

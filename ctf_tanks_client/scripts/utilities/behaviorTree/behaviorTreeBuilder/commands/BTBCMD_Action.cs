@@ -29,6 +29,18 @@ public class BTBCMD_Action
       case BT_ACTION.kMove_To:
         return new Action_MoveTo();
 
+      case BT_ACTION.kIs_Path_Node_In_DeadZone:
+        return new Cond_IsNodeDeadZone();
+
+      case BT_ACTION.kReverse_Alignment:
+        return new Action_ReverseAlignment();
+
+      case BT_ACTION.kHas_Active_Path:
+        return new Cond_HasActivePath();
+
+      case BT_ACTION.kStop:
+        return new Action_Stop();
+
       default:
         GD.PrintErr("Action: " + _m_action.ToString() + "is not implemented.");
         return null;

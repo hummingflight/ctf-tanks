@@ -77,7 +77,7 @@ public class BehaviorNode
   IsTerminated()
   {
 
-    return _m_status == NODE_STATUS.kSucess || _m_status == NODE_STATUS.kFailure;
+    return _m_status == NODE_STATUS.kSuccess || _m_status == NODE_STATUS.kFailure;
 
   }
 

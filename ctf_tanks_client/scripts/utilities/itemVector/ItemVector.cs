@@ -168,7 +168,7 @@
 
   }
 
-  public void
+  public virtual void
   Clear()
   {
 

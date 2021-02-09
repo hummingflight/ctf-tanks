@@ -36,7 +36,7 @@ public class ParallelNode
 
       NODE_STATUS status = node.m_item.GetStatus();
 
-      if(status == NODE_STATUS.kSucess)
+      if(status == NODE_STATUS.kSuccess)
       {
 
         ++iSuccessCount;
@@ -44,7 +44,7 @@ public class ParallelNode
         if(_m_eSuccessPolicy == OPERATION_POLICY.KRequiereOne)
         {
 
-          return NODE_STATUS.kSucess;
+          return NODE_STATUS.kSuccess;
 
         }
 
@@ -84,7 +84,7 @@ public class ParallelNode
       )
     {
 
-      return NODE_STATUS.kSucess;
+      return NODE_STATUS.kSuccess;
 
     }
 

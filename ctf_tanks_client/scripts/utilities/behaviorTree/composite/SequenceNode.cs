@@ -34,7 +34,7 @@ public class SequenceNode
 
       NODE_STATUS status = _m_currentNode.m_item.Tick(_actor);
 
-      if(status != NODE_STATUS.kSucess)
+      if(status != NODE_STATUS.kSuccess)
       {
 
         return status;
@@ -46,7 +46,7 @@ public class SequenceNode
       if(_m_currentNode == _m_children.END)
       {
 
-        return NODE_STATUS.kSucess;
+        return NODE_STATUS.kSuccess;
 
       }
 

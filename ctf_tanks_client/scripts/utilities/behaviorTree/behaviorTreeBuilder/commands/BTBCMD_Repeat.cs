@@ -1,7 +1,7 @@
 ﻿using Godot;
 
 public class BTBCMD_Repeat
-: BTBCMD
+: BTBCMD_Decorator
 {
 
   public BTBCMD_Repeat(int _count)
@@ -13,68 +13,16 @@ public class BTBCMD_Repeat
 
   }
 
-  public BehaviorNode 
-  Exec(BTBuilder _BTBuilder)
+  public override BehaviorNode 
+  Instantiate(BehaviorNode _child)
   {
 
-    BTBCMD command = _BTBuilder.m_aCommands.Dequeue();
+    RepeatNode repeat = new RepeatNode(_child);
 
-    RepeatNode repeatNode = null;
+    repeat.SetCount(_m_count);
 
-    if(command.GetKey() != BTBCMD_KEY.kReturn)
-    {
-
-      if (command.GetKey() == BTBCMD_KEY.kEnd)
-      {
-
-        GD.PrintErr("BTBuilder SINTAX Error: End of commands reached.");
-
-        return repeatNode;
-
-      }
-
-      repeatNode = new RepeatNode(command.Exec(_BTBuilder));
-
-    }
-    else
-    {
-
-      GD.PrintErr("BTBuilder SINTAX Error: RETURN command after a Repeat " +
-        "command. Expected a command that returns a valid behavior.");
-
-      return repeatNode;
-
-    }
-
-    command = _BTBuilder.m_aCommands.Dequeue();
-
-    if (command.GetKey() == BTBCMD_KEY.kReturn)
-    {
-
-      if (command.GetKey() == BTBCMD_KEY.kEnd)
-      {
-
-        GD.PrintErr("BTBuilder SINTAX Error: End of commands reached.");
-
-        return repeatNode;
-
-      }
-
-      GD.PrintErr("BTBuilder SINTAX Error: Expected a RETURN command");
-
-      return repeatNode;
-
-    }
-
-    return repeatNode;
-
-  }
-
-  public BTBCMD_KEY 
-  GetKey()
-  {
-
-    return BTBCMD_KEY.kRepeat;
+    return repeat;
+  
   }
 
   protected int _m_count;

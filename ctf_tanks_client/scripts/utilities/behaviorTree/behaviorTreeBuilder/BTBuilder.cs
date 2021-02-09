@@ -13,6 +13,16 @@ public class BTBuilder
   }
 
   public BTBuilder
+  Reverse()
+  {
+
+    m_aCommands.Enqueue(new BTBCMD_Reverse());
+
+    return this;
+
+  }
+
+  public BTBuilder
   Action(BT_ACTION _action)
   {
 

@@ -28,7 +28,7 @@ public class Action_CourseTowardsEnemyBase
 
     itemDestination.v3Value = enemyBasePosition;
 
-    return NODE_STATUS.kSucess;
+    return NODE_STATUS.kSuccess;
 
   }
 

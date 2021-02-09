@@ -12,17 +12,26 @@ public class Cond_IsNodeDeadZone
     BItem_Path item_Path
     = _actor.m_blackboard.GetItem<BItem_Path>(BLACKBOARD_ITEM.kPath);
 
-    CTF.PathNode pathNode = item_Path.m_vectorPathNode.ACTIVE.m_item;
+    ActiveItemVector<CTF.PathNode> path = item_Path.m_vectorPathNode;
 
-    // Get tank physics
-    CmpTankPhysics physics 
-      = _actor.GetComponent<CmpTankPhysics>(COMPONENT_ID.kTankPhysics);
+    ItemVectorNode<CTF.PathNode> activePathNode = path.ACTIVE;
 
-    // Check if path node is in the Tank dead zone.
-    if(pathNode.IsInSteeringDeadZone(physics, physics.MAX_STEERING_ANGLE_OPENING * 0.5f))
+    if (activePathNode != path.END && activePathNode != path.BEGIN)
     {
 
-      return NODE_STATUS.kSucess;
+      CTF.PathNode pathNode = path.ACTIVE.m_item;
+
+      // Get tank physics
+      CmpTankPhysics physics
+        = _actor.GetComponent<CmpTankPhysics>(COMPONENT_ID.kTankPhysics);
+
+      // Check if path node is in the Tank dead zone.
+      if (pathNode.IsInSteeringDeadZone(physics, physics.MAX_STEERING_ANGLE_OPENING * 0.5f))
+      {
+
+        return NODE_STATUS.kSuccess;
+
+      }
 
     }
 

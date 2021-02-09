@@ -58,7 +58,7 @@ public class RepeatNode
       else if (++_m_iCounter == _m_iLimit)
       {
 
-        return NODE_STATUS.kSucess;
+        return NODE_STATUS.kSuccess;
 
       }
       else

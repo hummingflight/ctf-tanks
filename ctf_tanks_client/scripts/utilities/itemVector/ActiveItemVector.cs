@@ -2,6 +2,16 @@
 : ItemVector<T> where T : class
 {
 
+  public ActiveItemVector()
+    : base()
+  {
+
+    Start();
+
+    return;
+
+  }
+
   public void
   Start()
   {
@@ -51,6 +61,18 @@
   {
 
     _m_active = _active;
+
+    return;
+
+  }
+
+  public override void
+  Clear()
+  {
+
+    base.Clear();
+
+    Start();
 
     return;
 

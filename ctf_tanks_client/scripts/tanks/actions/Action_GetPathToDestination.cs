@@ -56,7 +56,7 @@ public class Action_GetPathToDestination
     pathNodeVector.Start();
 
     // Return success.
-    return NODE_STATUS.kSucess;
+    return NODE_STATUS.kSuccess;
 
   }
 

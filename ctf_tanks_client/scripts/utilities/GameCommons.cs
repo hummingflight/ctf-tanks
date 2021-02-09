@@ -27,7 +27,7 @@ public enum NODE_STATUS
 
   kInvalid,
 
-  kSucess,
+  kSuccess,
 
   kFailure,
 
@@ -55,10 +55,15 @@ public enum BT_ACTION
 
   kMove_To,
 
-  kIs_Path_Node_In_DeadZone
+  kIs_Path_Node_In_DeadZone,
+
+  kStop,
+
+  kReverse_Alignment,
+
+  kHas_Active_Path
 
 }
-
 
 public enum OPERATION_RESULT
 {
@@ -97,9 +102,9 @@ public enum BTBCMD_KEY
 
   kParallel,
 
-  kRepeat,
+  kAction,
 
-  kAction
+  kDecorator
 
 }
 
