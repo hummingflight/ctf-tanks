@@ -35,6 +35,7 @@ public class TankActorBot
     _m_actor.AddComponent(new CmpContactSensors());
     _m_actor.AddComponent(new CmpBehaviorTreeKinematic(TankBehaviorFactory.LIGHT_TANK()));
     _m_actor.AddComponent(new CmpTankPhysicsDebug());
+    _m_actor.AddComponent(new CmpTankVisionDebug());
 
     return;
 

@@ -69,6 +69,32 @@ public class DebugManager
   }
 
   public void
+  DrawCone
+  (
+    Color _color,
+    float _width,
+    Vector3 _position,
+    Vector3 _direction,
+    Vector3 _up,
+    float _radius,
+    float _openingAngle
+  )
+  {
+
+    AddCommand(new DCMD_DrawCone(this,
+                                 _color,
+                                 _width,
+                                 _position,
+                                 _direction,
+                                 _up,
+                                 _radius,
+                                 _openingAngle));
+
+    return;
+
+  }
+
+  public void
   DrawCircle
   (
     Vector3 _position,

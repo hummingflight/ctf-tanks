@@ -42,9 +42,6 @@ public class Action_MoveTo
 
     ActiveItemVector<CTF.PathNode> path = pathItem.m_vectorPathNode;
 
-    // Debug Path.
-    _DebugPath(path);
-
     // Check failure conditions.
     if(path == null)
     {
@@ -343,25 +340,6 @@ public class Action_MoveTo
     _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kTank_Steering);
 
     itemWheelSteering.fValue = steeringStrength;
-
-    return;
-
-  }
-
-  private void 
-  _DebugPath(ActiveItemVector<CTF.PathNode> _path)
-  {
-
-    // Debug desire velocity.
-
-    MasterManager master = MasterManager.GetInstance();
-
-    master.DEBUG_MANAGER.DrawPath
-    (
-      _path,
-      new Color(0, 0, 0, 1),
-      2
-    );
 
     return;
 

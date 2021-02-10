@@ -40,6 +40,24 @@ public class CmpTankPhysicsDebug
     ////////////////////////////////////////////
     // Debugging
 
+    BItem_Path pathItem = _m_actor
+                          .m_blackboard
+                          .GetItem<BItem_Path>(BLACKBOARD_ITEM.kPath);
+
+    ActiveItemVector<CTF.PathNode> path = pathItem.m_vectorPathNode;
+
+    if (path != null)
+    {
+
+      if(path.SIZE > 0)
+      {
+
+        _DebugPath(path);
+
+      }
+
+    }    
+
     _DebugVelocity();
 
     _DebugAcceleration();
@@ -53,6 +71,25 @@ public class CmpTankPhysicsDebug
   /**********************************************/
   /* Private                                    */
   /**********************************************/
+
+  private void
+  _DebugPath(ActiveItemVector<CTF.PathNode> _path)
+  {
+
+    // Debug desire velocity.
+
+    MasterManager master = MasterManager.GetInstance();
+
+    master.DEBUG_MANAGER.DrawPath
+    (
+      _path,
+      new Color(0, 0, 0, 1),
+      2
+    );
+
+    return;
+
+  }
 
   private void
   _DebugVelocity()
