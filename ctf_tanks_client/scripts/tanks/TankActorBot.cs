@@ -1,7 +1,7 @@
 ﻿using Godot;
 
 public class TankActorBot
-  : KinematicBody
+  : KinematicActor
 {
 
   /**********************************************/
@@ -105,24 +105,6 @@ public class TankActorBot
   public TEAM_KEY m_team;
 
   [Export]
-  public bool m_activeTank = false;
-
-  /**********************************************/
-  /* Protected                                  */
-  /**********************************************/
-  
-  /// <summary>
-  /// Get the actor of this tank.
-  /// </summary>
-  public Actor<KinematicBody>
-  Actor
-  {
-    get
-    {
-      return _m_actor;
-    }
-  }
-
-  protected Actor<KinematicBody> _m_actor;
+  public bool m_activeTank = false;  
 
 }

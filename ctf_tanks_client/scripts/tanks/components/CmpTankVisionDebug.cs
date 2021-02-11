@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 public class CmpTankVisionDebug
 : CmpTankVision
@@ -12,7 +13,7 @@ public class CmpTankVisionDebug
 
     DebugVisionRange();
 
-    DebugCollisions();
+    DebugVisibleObjects();
   
   }
 
@@ -35,8 +36,21 @@ public class CmpTankVisionDebug
   }
 
   private void
-  DebugCollisions()
+  DebugVisibleObjects()
   {
+
+    MasterManager master = MasterManager.GetInstance();
+
+    List<PhysicsBody> visibleObjects = GetVisibleBodies();
+
+    foreach(PhysicsBody body in visibleObjects)
+    {
+
+      master.DEBUG_MANAGER.DrawCircle(body.Transform.origin,
+                                      3.0f,
+                                      new Color(1, 1, 0));
+
+    }
 
     return;
 

@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 /// <summary>
 /// Components needed:
@@ -36,6 +37,53 @@ public class CmpTankVision
   
   }
 
+  public List<PhysicsBody>
+  GetVisibleBodies()
+  {
+
+    Godot.Collections.Array aBodies = _m_area.GetOverlappingBodies();
+
+    int size = aBodies.Count;
+    int index = 0;
+
+    List<PhysicsBody> aVisibleBodies = new List<PhysicsBody>();
+
+    while(index < size)
+    {
+
+      PhysicsBody physicsBody = aBodies[index] as PhysicsBody;
+
+      // Check if this body is a kinematic actor.
+      if(physicsBody is KinematicActor kActor)
+      {
+
+        // Exclude parent        
+        if(!kActor.Equals(_m_node))
+        {
+
+          if (IsVisible(kActor))
+          {
+
+            aVisibleBodies.Add(kActor);
+
+          }
+
+        }
+
+      }
+
+      ++index;
+
+    }
+
+    return aVisibleBodies;
+
+  }
+
+  /// <summary>
+  /// Set the depth of the vision.
+  /// </summary>
+  /// <param name="_radius"></param>
   public void
   SetVisionRadius(float _radius)
   {
@@ -47,6 +95,23 @@ public class CmpTankVision
     _m_area.Scale = new Vector3(_radius, _m_area.Scale.y, _radius);
 
     return;
+
+  }
+
+  /// <summary>
+  /// Check if the position of the body is visible to the tank range of view.
+  /// </summary>
+  /// <param name="_body"></param>
+  /// <returns></returns>
+  public bool
+  IsVisible(PhysicsBody _body)
+  {
+
+    Vector3 toBody = _body.Transform.origin - _m_node.Transform.origin;
+
+    float angle = _m_physics.DIRECTION.AngleTo(toBody);
+
+    return angle < _m_openingAngle * 0.5f;
 
   }
 

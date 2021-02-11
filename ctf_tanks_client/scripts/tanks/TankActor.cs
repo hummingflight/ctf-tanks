@@ -1,7 +1,7 @@
 ﻿using Godot;
 
 public class TankActor
-  : KinematicBody
+  : KinematicActor
 {
 
   override public void
