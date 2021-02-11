@@ -41,6 +41,15 @@ public class BTBCMD_Action
       case BT_ACTION.kStop:
         return new Action_Stop();
 
+      case BT_ACTION.kIs_The_Enemy_In_Sight:
+        return new Cond_IsTheEnemyInSight();
+
+      case BT_ACTION.kSelect_Enemy:
+        return new Action_SelectEnemy();
+
+      case BT_ACTION.kShoot_The_Enemy:
+        return new Action_ShootTheEnemy();
+
       default:
         GD.PrintErr("Action: " + _m_action.ToString() + "is not implemented.");
         return null;

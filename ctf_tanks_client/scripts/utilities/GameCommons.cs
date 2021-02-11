@@ -61,7 +61,13 @@ public enum BT_ACTION
 
   kReverse_Alignment,
 
-  kHas_Active_Path
+  kHas_Active_Path,
+
+  kIs_The_Enemy_In_Sight,
+
+  kShoot_The_Enemy,
+
+  kSelect_Enemy
 
 }
 

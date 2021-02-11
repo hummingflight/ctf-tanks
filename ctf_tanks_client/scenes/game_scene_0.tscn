@@ -222,7 +222,7 @@ script = ExtResource( 12 )
 cameraKey = "camera_behindTank"
 
 [node name="light_tank_bot" parent="." instance=ExtResource( 6 )]
-transform = Transform( -0.681526, 0, 0.731794, 0, 1, 0, -0.731794, 0, -0.681526, 35.078, 0, 69.345 )
+transform = Transform( -0.681526, 0, 0.731794, 0, 1, 0, -0.731794, 0, -0.681526, 36.2334, -1.90735e-06, 71.1227 )
 script = ExtResource( 9 )
 m_team = 1
 m_activeTank = true

@@ -94,8 +94,6 @@ public class Action_MoveTo
       if(path.ACTIVE != path.END)
       {
 
-        GD.Print("Active Node Index: " + ++_m_nodeIndex);
-
         // Get new destination.
         destination = path.ACTIVE.m_item.position;
 
