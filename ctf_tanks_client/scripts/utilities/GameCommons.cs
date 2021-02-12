@@ -130,12 +130,33 @@ public enum COMPONENT_ID
 
   kContactSensors,
 
-  kTankVision
+  kTankVision,
+
+  kBehaviorTree,
+
+  kTurretController
+
+}
+
+public enum STATE_ID
+{
+
+  kUndefined,
+
+  kStopShooting,
+
+  kTargetTheEnemy,
+
+  kShoot,
+
+  kReload
 
 }
 
 public enum BLACKBOARD_ITEM
 {
+
+  kTurret_Rotation,
 
   kTank_Steering,
 
@@ -149,7 +170,9 @@ public enum BLACKBOARD_ITEM
 
   kPath,
 
-  kNavigation
+  kNavigation,
+
+  kEnemy
 
 }
 

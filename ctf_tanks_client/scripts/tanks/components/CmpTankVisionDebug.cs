@@ -41,9 +41,9 @@ public class CmpTankVisionDebug
 
     MasterManager master = MasterManager.GetInstance();
 
-    List<PhysicsBody> visibleObjects = GetVisibleBodies();
+    List<KinematicActor> visibleObjects = GetVisibleBodies();
 
-    foreach(PhysicsBody body in visibleObjects)
+    foreach(KinematicActor body in visibleObjects)
     {
 
       master.DEBUG_MANAGER.DrawCircle(body.Transform.origin,

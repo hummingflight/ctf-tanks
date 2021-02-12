@@ -62,6 +62,4 @@ public class TankActor
   [Export]
   public TEAM_KEY m_team;
 
-  protected Actor<KinematicBody> _m_actor;
-
 }

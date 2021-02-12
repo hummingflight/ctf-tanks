@@ -4,6 +4,15 @@ public class KinematicActor
   : KinematicBody
 {
 
+  public override void 
+  _Ready()
+  {
+
+    _m_actor = new Actor<KinematicBody>(this);
+    return;
+
+  }
+
   /**********************************************/
   /* Protected                                  */
   /**********************************************/

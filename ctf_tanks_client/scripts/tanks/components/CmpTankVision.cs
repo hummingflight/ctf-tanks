@@ -37,7 +37,7 @@ public class CmpTankVision
   
   }
 
-  public List<PhysicsBody>
+  public List<KinematicActor>
   GetVisibleBodies()
   {
 
@@ -46,7 +46,7 @@ public class CmpTankVision
     int size = aBodies.Count;
     int index = 0;
 
-    List<PhysicsBody> aVisibleBodies = new List<PhysicsBody>();
+    List<KinematicActor> aVisibleBodies = new List<KinematicActor>();
 
     while(index < size)
     {

@@ -1,4 +1,5 @@
 ﻿using Godot;
+using System.Collections.Generic;
 
 public class Cond_IsTheEnemyInSight
 : BehaviorNode
@@ -8,7 +9,17 @@ public class Cond_IsTheEnemyInSight
   Update(Actor<KinematicBody> _actor)
   {
 
-    // TODO
+    CmpTankVision tankVision 
+      = _actor.GetComponent<CmpTankVision>(COMPONENT_ID.kTankVision);
+
+    List<KinematicActor> visibleActors = tankVision.GetVisibleBodies();
+
+    if(visibleActors.Count > 0)
+    {
+
+      return NODE_STATUS.kSuccess;     
+
+    }
     
     return NODE_STATUS.kFailure;
   

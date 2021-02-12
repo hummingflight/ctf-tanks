@@ -26,8 +26,6 @@ public class Action_MoveTo
   OnInit(Actor<KinematicBody> _actor)
   {
 
-    _m_nodeIndex = 0;
-
     return;
 
   }
@@ -342,8 +340,6 @@ public class Action_MoveTo
     return;
 
   }
-
-  private uint _m_nodeIndex;
 
   /**********************************************/
   /* Physics                                    */

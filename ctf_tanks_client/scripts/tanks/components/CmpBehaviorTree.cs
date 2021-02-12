@@ -39,6 +39,14 @@ public class CmpBehaviorTreeKinematic
 
   }
 
+  public override COMPONENT_ID 
+  GetID()
+  {
+
+    return COMPONENT_ID.kBehaviorTree;
+  
+  }
+
 
   private BehaviorTree _m_behaviorTree;
 
