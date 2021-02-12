@@ -164,6 +164,7 @@ public class MasterManager
     AddManager(MANAGER_KEY.kDebugManager, _m_debugManager);
 
     AddManager(MANAGER_KEY.kCameraManager, new CameraManager());
+    AddManager(MANAGER_KEY.kBulletManager, new BulletManager());
 
     return;
 

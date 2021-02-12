@@ -9,7 +9,9 @@ public enum MANAGER_KEY
 
   kDebugManager,
 
-  kCameraManager
+  kCameraManager,
+
+  kBulletManager
 
 }
 

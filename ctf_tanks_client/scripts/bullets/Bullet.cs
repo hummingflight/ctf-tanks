@@ -45,7 +45,10 @@ public class Bullet
 
       SetProcess(_m_isEnable);
       SetPhysicsProcess(_m_isEnable);
-      SetProcessInput(_m_isEnable);      
+      SetProcessInput(_m_isEnable);
+
+      // Add this bullet to the disable list.
+      _m_pool.AddToDisable(this);
 
     }
 
@@ -71,6 +74,19 @@ public class Bullet
     }
 
     return;
+  }
+
+  /// <summary>
+  /// Set the bullet pool.
+  /// </summary>
+  /// <param name="_pool"></param>
+  public void
+  SetPool(BulletPool _pool)
+  {
+
+    _m_pool = _pool;
+    return;
+
   }
 
   /// <summary>
@@ -118,5 +134,10 @@ public class Bullet
   /// Indicates if the bullet is enable.
   /// </summary>
   protected bool _m_isEnable = true;
+
+  /// <summary>
+  /// Reference to the bullet pool.
+  /// </summary>
+  protected BulletPool _m_pool;
 
 }
