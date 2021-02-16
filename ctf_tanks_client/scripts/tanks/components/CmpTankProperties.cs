@@ -3,15 +3,7 @@
 public class CmpTankProperties
 : Component<KinematicBody>
 {
-
-  override public void
-  _Ready()
-  {
-
-    return;
-
-  }
-
+  
   public override COMPONENT_ID 
   GetID()
   {
@@ -20,20 +12,75 @@ public class CmpTankProperties
 
   }
 
-  public Vector3 m_actualVelocity;
+  /// <summary>
+  /// Set the team that this tank belongs to.
+  /// </summary>
+  /// <param name="_team"></param>
+  public void
+  SetTeam(Team _team)
+  {
 
-  public float _m_gravity;
+    //Add member.
+    _team.AddMember(_m_node.Name, _m_actor);
 
-  public float _m_enginePower;
+    //Save team.
+    _m_team = _team;
 
-  public float _m_reversePower;
+    return;
 
-  public float m_steerMaxAngleOpening;
+  }
 
-  public float _m_friction;
+  public OPERATION_RESULT
+  SetTeam(TEAM_KEY _team)
+  {
 
-  public float _m_drag;
+    // Get the teams manager.
+    TeamsManager teamsMng = MasterManager
+                            .GetInstance()
+                            .GAME_MANAGER
+                            .TEAMS_MANAGER;
 
-  public TEAM_KEY m_teamKey;
+    if(teamsMng.HasTeam(_team))
+    {
+
+      // Set team.
+      SetTeam(teamsMng.GetTeam(_team));
+
+      return OPERATION_RESULT.kSuccess;
+
+    }
+
+    return OPERATION_RESULT.kFail;
+
+  }
+
+  /// <summary>
+  /// Get the team this tank belongs to.
+  /// </summary>
+  public Team
+  TEAM
+  {
+    get
+    {
+      return _m_team;
+    }
+  }
+
+  /// <summary>
+  /// Get the key of the team this tank belongs to.
+  /// </summary>
+  public TEAM_KEY
+  TEAM_KEY
+  {
+    get
+    {
+      return _m_team.KEY;
+    }
+  }
+
+  /// <summary>
+  /// The team this tank belongs to.
+  /// </summary>
+  private Team _m_team;
 
 }

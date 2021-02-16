@@ -8,8 +8,8 @@ public class GameManager
   GameManager()
   {
 
-    m_levelPathfinding = new LevelPathfinding();
-    m_teamsManagers = new TeamsManager();
+    _m_levelPathfinding = new LevelPathfinding();
+    _m_teamsManagers = new TeamsManager();
 
     return;
 
@@ -29,7 +29,7 @@ public class GameManager
   SetActiveTank(string _name, TEAM_KEY _team)
   {
 
-    Team team = m_teamsManagers.GetTeam(_team);
+    Team team = _m_teamsManagers.GetTeam(_team);
 
     if(team.HasMember(_name))
     {
@@ -63,14 +63,38 @@ public class GameManager
   }
 
   /// <summary>
+  /// Get the level path finding of this game.
+  /// </summary>
+  public LevelPathfinding
+  LEVEL_PATHFINDING
+  {
+    get
+    {
+      return _m_levelPathfinding;
+    }
+  }
+
+  /// <summary>
+  /// Get the teams manager of this game.
+  /// </summary>
+  public TeamsManager
+  TEAMS_MANAGER
+  {
+    get
+    {
+      return _m_teamsManagers;
+    }
+  }
+
+  /// <summary>
   /// Level path finding manager.
   /// </summary>
-  public LevelPathfinding m_levelPathfinding;
+  private LevelPathfinding _m_levelPathfinding;
 
   /// <summary>
   /// Team manager.
   /// </summary>
-  public TeamsManager m_teamsManagers;
+  private TeamsManager _m_teamsManagers;
 
   /**********************************************/
   /* Private                                    */

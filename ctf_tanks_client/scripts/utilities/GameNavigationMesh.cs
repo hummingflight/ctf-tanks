@@ -9,11 +9,12 @@ public class GameNavigationMesh
   _Ready()
   {
 
-    // Get Master Manager.
-    MasterManager master = MasterManager.GetInstance();
+    MasterManager.GetInstance()
+                 .GAME_MANAGER
+                 .LEVEL_PATHFINDING
+                 .SetLevelNavigation(this);
 
-    // Set Level Pathfinding.
-    master.GAME_MANAGER.m_levelPathfinding.SetLevelNavigation(this);
+    return;
     
   }
 

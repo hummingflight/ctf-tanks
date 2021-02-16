@@ -12,15 +12,14 @@ public class Action_CourseTowardsEnemyBase
     CmpTankProperties properties =
     _actor.GetComponent<CmpTankProperties>(COMPONENT_ID.kTankProperties);
 
-    TEAM_KEY enemyTeamKey = (properties.m_teamKey == TEAM_KEY.kBlue ? TEAM_KEY.kRed : TEAM_KEY.kBlue);
-
-    MasterManager master = MasterManager.GetInstance();
-
-    GameManager gameManager = master.GAME_MANAGER;
+    TEAM_KEY enemyTeamKey = (properties.TEAM_KEY == TEAM_KEY.kBlue ? TEAM_KEY.kRed : TEAM_KEY.kBlue);
 
     // Get Enemy Base Position.
-    Vector3 enemyBasePosition = 
-    gameManager.m_teamsManagers.GetTeam(enemyTeamKey).GetBasePosition();    
+    Vector3 enemyBasePosition = MasterManager.GetInstance()
+                                .GAME_MANAGER
+                                .TEAMS_MANAGER
+                                .GetTeam(enemyTeamKey)
+                                .GetBasePosition();    
 
     // Set destination.
     BItem_Vector3 itemDestination =

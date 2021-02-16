@@ -8,11 +8,17 @@ public class TeamBase
   _Ready()
   {
 
-    MasterManager master = MasterManager.GetInstance();
+    Team team = MasterManager.GetInstance()
+                .GAME_MANAGER
+                .TEAMS_MANAGER
+                .GetTeam(m_teamKey);
 
-    GameManager gameManager = master.GAME_MANAGER;
+    if(team == null)
+    {
 
-    Team team = gameManager.m_teamsManagers.GetTeam(m_teamKey);
+      GD.Print("Team does not exist: " + team.ToString());
+
+    }
 
     team.SetBaseNode(this);
 

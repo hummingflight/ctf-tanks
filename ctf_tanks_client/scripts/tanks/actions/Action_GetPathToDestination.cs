@@ -7,13 +7,12 @@ public class Action_GetPathToDestination
   public override NODE_STATUS
   Update(Actor<KinematicBody> _actor)
   {
-  
-    // Get game manager.
-    GameManager gameManager = MasterManager.GetInstance().GAME_MANAGER;
 
     // Get the Godot navigation node.
-    Navigation navigationNode =
-      gameManager.m_levelPathfinding.GetLevelNavigation();
+    Navigation navigationNode = MasterManager.GetInstance()
+                                .GAME_MANAGER
+                                .LEVEL_PATHFINDING
+                                .GetLevelNavigation();
 
     if(navigationNode == null)
     {

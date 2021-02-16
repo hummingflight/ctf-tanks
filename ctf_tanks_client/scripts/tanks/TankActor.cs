@@ -25,8 +25,6 @@ public class TankActor
 
     CmpTankProperties properties = new CmpTankProperties();
 
-    properties.m_teamKey = m_team;
-
     _m_actor.AddComponent(properties);
     _m_actor.AddComponent(new CmpTankInput());
     _m_actor.AddComponent(new CmpTankPhysics());

@@ -58,29 +58,22 @@ public class TankActorBot
     turret.SetTurretNode(turretNode);
 
     ////////////////////////////////////////////
-    // Teams
-
-    // Set properties
+    // Tank Properties
 
     CmpTankProperties properties 
       = _m_actor.GetComponent<CmpTankProperties>(COMPONENT_ID.kTankProperties);
 
-    properties.m_teamKey = m_team;
-
-    MasterManager master = MasterManager.GetInstance();
-
-    GameManager gameManager = master.GAME_MANAGER;
-
-    Team team = gameManager.m_teamsManagers.GetTeam(m_team);
-
-    team.AddMember(_m_actor.GetNode().Name, _m_actor);
+    // Set team.
+    properties.SetTeam(m_team);
 
     // Active Tank
 
     if(m_activeTank)
     {
 
-      gameManager.SetActiveTank(_m_actor);
+      MasterManager.GetInstance()
+                   .GAME_MANAGER
+                   .SetActiveTank(_m_actor);
 
     }
 
