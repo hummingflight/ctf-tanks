@@ -33,38 +33,51 @@ public class CmpTankVision
     // Get Tank Physics.
     _m_physics = _m_actor.GetComponent<CmpTankPhysics>(COMPONENT_ID.kTankPhysics);
 
+    _m_visibleActors = new List<KinematicActor>();
+
     return;
   
   }
 
-  public List<KinematicActor>
-  GetVisibleBodies()
+
+  public override void 
+  _PhysicsProcess(float _delta)
   {
 
+    // Clear previous list.
+    _m_visibleActors.Clear();
+
+    // Get overlapping bodies.
     Godot.Collections.Array aBodies = _m_area.GetOverlappingBodies();
 
     int size = aBodies.Count;
     int index = 0;
 
-    List<KinematicActor> aVisibleBodies = new List<KinematicActor>();
-
-    while(index < size)
+    // Iterate over overlapping bodies.
+    while (index < size)
     {
 
       PhysicsBody physicsBody = aBodies[index] as PhysicsBody;
 
       // Check if this body is a kinematic actor.
-      if(physicsBody is KinematicActor kActor)
+      if (physicsBody is KinematicActor kActor)
       {
 
         // Exclude parent        
-        if(!kActor.Equals(_m_node))
+        if (!kActor.Equals(_m_node))
         {
 
-          if (IsVisible(kActor) && kActor.Actor.IS_ENABLE)
-          {
+          // Check if actor is enable.
+          if (kActor.Actor.IS_ENABLE)
+          {            
 
-            aVisibleBodies.Add(kActor);
+            // Check if actor is visible for the tank.
+            if(IsVisible(kActor))
+            {
+
+              _m_visibleActors.Add(kActor);
+            
+            }           
 
           }
 
@@ -76,7 +89,15 @@ public class CmpTankVision
 
     }
 
-    return aVisibleBodies;
+    return;
+  
+  }
+
+  public List<KinematicActor>
+  GetVisibleBodies()
+  {
+
+    return _m_visibleActors;
 
   }
 
@@ -100,6 +121,8 @@ public class CmpTankVision
 
   /// <summary>
   /// Check if the position of the body is visible to the tank range of view.
+  /// Because this method need the physic space state, it must be called during
+  /// the physics process.
   /// </summary>
   /// <param name="_body"></param>
   /// <returns></returns>
@@ -107,11 +130,52 @@ public class CmpTankVision
   IsVisible(PhysicsBody _body)
   {
 
-    Vector3 toBody = _body.Transform.origin - _m_node.Transform.origin;
+    Vector3 selfPosition = _m_node.GlobalTransform.origin;
 
+    selfPosition += _m_node.GlobalTransform.basis.y.Normalized() * 3.0f;
+
+    Vector3 toBody = _body.GlobalTransform.origin - selfPosition;    
+    
     float angle = _m_physics.DIRECTION.AngleTo(toBody);
 
-    return angle < _m_openingAngle * 0.5f;
+    // Check if body is in the vision area.
+    if(angle < _m_openingAngle * 0.5f)
+    {
+
+      // Get the physics space state.
+      PhysicsDirectSpaceState spaceState = _m_node.GetWorld().DirectSpaceState;
+
+
+      // Vector to agent with the vision length.
+      toBody = toBody.Normalized() * _m_radius;
+
+      // Check if it is behind another object.
+      Godot.Collections.Dictionary result = spaceState.IntersectRay
+      (
+        selfPosition,
+        selfPosition + toBody,
+        new Godot.Collections.Array() { _m_node }
+      );
+
+     if(result.Count > 0)
+     {
+
+        PhysicsBody collider = result["collider"] as PhysicsBody;
+
+        if(collider != null)
+        {
+
+          // Check if the first collider is the same as the body. If not, something
+          // is between the position of the tank an the body.
+          return collider.GetInstanceId() == _body.GetInstanceId();
+
+        }
+
+     }
+
+    }
+
+    return false;
 
   }
 
@@ -167,7 +231,7 @@ public class CmpTankVision
   /// <summary>
   /// Opening Angle of vision.
   /// </summary>
-  protected float _m_openingAngle = 3.14159f;
+  protected float _m_openingAngle = 2.14159f;
 
   /// <summary>
   /// Vision radius.
@@ -178,5 +242,10 @@ public class CmpTankVision
   /// Reference to the tank physics.
   /// </summary>
   protected CmpTankPhysics _m_physics;
+
+  /// <summary>
+  /// List of visible actors.
+  /// </summary>
+  protected List<KinematicActor> _m_visibleActors;
 
 }

@@ -212,6 +212,14 @@ m_initialHealth = 3
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 30.8289, 1.96029, 26.7824 )
 m_initialHealth = 3
 
+[node name="TargetBox3" parent="Scenary" instance=ExtResource( 2 )]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 41.3868, 1.9603, -43.4964 )
+m_initialHealth = 3
+
+[node name="TargetBox4" parent="Scenary" instance=ExtResource( 2 )]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 26.1723, 1.9603, -38.1492 )
+m_initialHealth = 3
+
 [node name="Cam_topOrtho" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 50.8805, 0 )
 projection = 1
@@ -228,7 +236,7 @@ script = ExtResource( 12 )
 cameraKey = "camera_behindTank"
 
 [node name="light_tank_bot" parent="." instance=ExtResource( 6 )]
-transform = Transform( 0.999978, 0, -0.00659725, 0, 1, 0, 0.00659725, 0, 0.999978, 36.2334, -1.90735e-06, 71.1227 )
+transform = Transform( -0.718758, 0, 0.695261, 0, 1, 0, -0.695261, 0, -0.718758, 36.2334, -1.90735e-06, 71.1227 )
 script = ExtResource( 9 )
 m_team = 1
 m_activeTank = true

@@ -11,7 +11,14 @@ public class Trans_EnemyInSight
     BItem_KinematicActor item =
     _args.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
 
-    return item.ACTOR != null;
+    if(item.ACTOR != null)
+    {
+
+      return item.ACTOR.IS_ENABLE;
+
+    }
+
+    return false;
   }
 
   public override STATE_ID 

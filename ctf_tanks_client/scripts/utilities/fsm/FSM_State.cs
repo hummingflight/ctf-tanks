@@ -51,7 +51,7 @@ public class FSM_State<T,U>
     if(!CheckTransitions(_arg))
     {
 
-      Update(_arg);
+      return Update(_arg);
 
     }
 

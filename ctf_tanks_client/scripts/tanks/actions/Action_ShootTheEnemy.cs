@@ -36,39 +36,7 @@ public class Action_ShootTheEnemy
 
   public override NODE_STATUS 
   Update(Actor<KinematicBody> _actor)
-  {
-
-    BItem_KinematicActor item =
-      _actor.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
-
-    Actor<KinematicBody> enemy = item.ACTOR;
-
-    if (enemy == null)
-    {
-
-      // No active enemy.
-      return NODE_STATUS.kFailure;
-
-    }
-    else
-    {
-
-      CmpTankVision tankVision 
-        = _actor.GetComponent<CmpTankVision>(COMPONENT_ID.kTankVision);
-
-      // Check if enemy is out of sight.
-      if(!tankVision.IsVisible(enemy.GetNode()))
-      {
-
-        // Remove enemy.
-        item.ACTOR = null;
-
-        // Enemy out of sight.
-        return NODE_STATUS.kFailure;
-
-      }
-
-    }
+  {    
 
     // Update active state.
     return _m_fsm.Update(_actor);
