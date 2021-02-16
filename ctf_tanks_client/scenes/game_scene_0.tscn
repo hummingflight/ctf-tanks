@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://prefabs/props/Floor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://prefabs/misc/TargetBox.tscn" type="PackedScene" id=2]
@@ -6,7 +6,7 @@
 [ext_resource path="res://scripts/managers/bullet/BulletPool.cs" type="Script" id=4]
 [ext_resource path="res://scripts/utilities/GameNavigationMesh.cs" type="Script" id=5]
 [ext_resource path="res://prefabs/tanks/light/light_tank_bot.tscn" type="PackedScene" id=6]
-[ext_resource path="res://scripts/gdScripts/TeamBase.cs" type="Script" id=8]
+[ext_resource path="res://prefabs/misc/TeamBase.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scripts/tanks/TankActorBot.cs" type="Script" id=9]
 [ext_resource path="res://prefabs/misc/DebugCanvas.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scripts/gdScripts/DebugCanvas.cs" type="Script" id=11]
@@ -19,17 +19,6 @@ polygons = [ PoolIntArray( 1, 0, 2 ), PoolIntArray( 2, 0, 3 ), PoolIntArray( 7, 
 cell/size = 0.33
 agent/height = 0.1
 agent/radius = 4.02
-
-[sub_resource type="CubeMesh" id=2]
-
-[sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 1, 0, 0, 1 )
-
-[sub_resource type="ConvexPolygonShape" id=4]
-points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
-
-[sub_resource type="SpatialMaterial" id=5]
-albedo_color = Color( 0, 0.109804, 1, 1 )
 
 [node name="Game" type="Node"]
 
@@ -180,29 +169,6 @@ transform = Transform( -1.62921e-05, 0, 6, 0, 6, 0, -100, 0, -9.77524e-07, -100.
 [node name="Wall2" parent="Scenary/Navigation/NavigationMeshInstance/ExteneralWalls" instance=ExtResource( 3 )]
 transform = Transform( 100, 0, 0, 0, 6, 0, 0, 0, 6, 0.007, 0, 99.922 )
 
-[node name="RedBase" type="StaticBody" parent="Scenary"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.342773, 6.86062, -83.6993 )
-script = ExtResource( 8 )
-
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/RedBase"]
-mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/RedBase"]
-shape = SubResource( 4 )
-
-[node name="BlueBase" type="StaticBody" parent="Scenary"]
-transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, -0.342773, 6.86062, 82.5106 )
-script = ExtResource( 8 )
-m_teamKey = 1
-
-[node name="MeshInstance" type="MeshInstance" parent="Scenary/BlueBase"]
-mesh = SubResource( 2 )
-material/0 = SubResource( 5 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Scenary/BlueBase"]
-shape = SubResource( 4 )
-
 [node name="TargetBox" parent="Scenary" instance=ExtResource( 2 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 6.29488, 1.96029, 46.4058 )
 m_initialHealth = 3
@@ -218,6 +184,13 @@ m_initialHealth = 3
 [node name="TargetBox4" parent="Scenary" instance=ExtResource( 2 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 26.1723, 1.9603, -38.1492 )
 m_initialHealth = 3
+
+[node name="TankBase" parent="Scenary" instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 82.3486 )
+
+[node name="TankBase2" parent="Scenary" instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -82.593 )
+m_teamKey = 1
 
 [node name="Cam_topOrtho" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 50.8805, 0 )
@@ -237,7 +210,6 @@ cameraKey = "camera_behindTank"
 [node name="light_tank_bot" parent="." instance=ExtResource( 6 )]
 transform = Transform( -0.718758, 0, 0.695261, 0, 1, 0, -0.695261, 0, -0.718758, 36.2334, -1.90735e-06, 71.1227 )
 script = ExtResource( 9 )
-m_team = 1
 m_activeTank = true
 
 [node name="DebugCanvas" parent="." instance=ExtResource( 10 )]
@@ -247,6 +219,7 @@ script = ExtResource( 11 )
 
 [node name="CameraManager" type="Node" parent="Managers"]
 script = ExtResource( 13 )
+initState = 1
 
 [node name="BulletPool" type="Node" parent="."]
 script = ExtResource( 4 )

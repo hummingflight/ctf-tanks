@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/texture_10.png-a9aef5f78479de29cb189163fb9d3d5b.s3tc.stex"
-path.etc="res://.import/texture_10.png-a9aef5f78479de29cb189163fb9d3d5b.etc.stex"
+path.s3tc="res://.import/Flag_Texture.png-5c9659442e49429c784262d3a04d5c01.s3tc.stex"
+path.etc="res://.import/Flag_Texture.png-5c9659442e49429c784262d3a04d5c01.etc.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/proto/Green/texture_10.png"
-dest_files=[ "res://.import/texture_10.png-a9aef5f78479de29cb189163fb9d3d5b.s3tc.stex", "res://.import/texture_10.png-a9aef5f78479de29cb189163fb9d3d5b.etc.stex" ]
+source_file="res://textures/misc/Flag_Texture.png"
+dest_files=[ "res://.import/Flag_Texture.png-5c9659442e49429c784262d3a04d5c01.s3tc.stex", "res://.import/Flag_Texture.png-5c9659442e49429c784262d3a04d5c01.etc.stex" ]
 
 [params]
 

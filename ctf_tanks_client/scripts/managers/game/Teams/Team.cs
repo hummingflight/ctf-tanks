@@ -14,6 +14,16 @@ public class Team
     _m_key = _key;
     _m_hMembers = new Dictionary<string, Actor<KinematicBody>>();
 
+    if(_key == TEAM_KEY.kBlue)
+    {      
+
+      _m_teamColor = new Color(0, 0, 1);
+    }
+    else
+    {
+      _m_teamColor = new Color(1, 0, 0);
+    }
+
     return;
 
   }
@@ -58,10 +68,11 @@ public class Team
   }
 
   public void
-  SetBaseNode(Spatial _node)
+  SetBaseNode(TeamBase _teamBase)
   {
 
-    _m_baseNode = _node;
+    // Save team base.
+    _m_baseNode = _teamBase;
 
     return;
 
@@ -71,7 +82,7 @@ public class Team
   GetBasePosition()
   {
 
-    return _m_baseNode.Transform.origin;
+    return _m_baseNode.GlobalTransform.origin;
 
   }
 
@@ -83,6 +94,30 @@ public class Team
     get
     {
       return _m_key;
+    }
+  }
+
+  /// <summary>
+  /// Get the base position.
+  /// </summary>
+  public Vector3
+  BASE_POSITION
+  {
+    get
+    {
+      return _m_baseNode.GlobalTransform.origin;
+    }
+  }
+
+  /// <summary>
+  /// Get the team color.
+  /// </summary>
+  public Color
+  TEAM_COLOR
+  {
+    get
+    {
+      return _m_teamColor;
     }
   }
 
@@ -103,6 +138,11 @@ public class Team
   /// <summary>
   /// Position of the team base.
   /// </summary>
-  private Spatial _m_baseNode;
+  private TeamBase _m_baseNode;
+
+  /// <summary>
+  /// The team color.
+  /// </summary>
+  private Color _m_teamColor;
 
 }

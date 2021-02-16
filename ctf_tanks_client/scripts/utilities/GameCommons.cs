@@ -212,6 +212,8 @@ public enum MESSAGE_ID
 
   kZero_health,
 
+  kEnterTeamBase,
+
   kDestroy
 
 }
