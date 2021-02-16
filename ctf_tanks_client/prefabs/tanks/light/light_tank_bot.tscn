@@ -54,6 +54,9 @@ transform = Transform( 1, 0, 5.68434e-14, 0, 1, 0, -5.68434e-14, 0, 1, 0, 0, 0 )
 mesh = SubResource( 2 )
 material/0 = ExtResource( 3 )
 
+[node name="spawn_point" type="Spatial" parent="TankRoot/Cartoon_TL_Base/Turret"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.65751e-05, 23.0717, 50.8685 )
+
 [node name="CollisionBody" type="CollisionShape" parent="."]
 transform = Transform( 2.79702, 0, 0, 0, 1.27737, 0, 0, 0, 3.02873, 0, 1.9786, 0.00106859 )
 shape = SubResource( 3 )

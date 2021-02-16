@@ -136,7 +136,11 @@ public enum COMPONENT_ID
 
   kBehaviorTree,
 
-  kTurretController
+  kTurretController,
+
+  kHealth,
+
+  kDestructible
 
 }
 
@@ -149,9 +153,7 @@ public enum STATE_ID
 
   kTargetTheEnemy,
 
-  kShoot,
-
-  kReload
+  kShoot
 
 }
 
@@ -174,7 +176,9 @@ public enum BLACKBOARD_ITEM
 
   kNavigation,
 
-  kEnemy
+  kEnemy,
+
+  kShootSignal
 
 }
 
@@ -202,7 +206,13 @@ public enum VARIABLE_TYPE
 public enum MESSAGE_ID
 {
 
-  KActive_Camera
+  KActive_Camera,
+
+  kReceive_Damage,
+
+  kZero_health,
+
+  kDestroy
 
 }
 

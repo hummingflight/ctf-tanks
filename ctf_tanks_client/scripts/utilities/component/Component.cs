@@ -1,4 +1,7 @@
-﻿public class Component<T>
+﻿using Godot;
+
+public class Component<T>
+  where T : Node
 { 
 
   /// <summary>
@@ -71,6 +74,28 @@
   /// </summary>
   virtual public void
   OnDisconnect()
+  {
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Trigger when the actor is enable.
+  /// </summary>
+  virtual public void
+  OnEnable()
+  {
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Trigger when the actor is disable.
+  /// </summary>
+  virtual public  void
+  OnDisable()
   {
 
     return;

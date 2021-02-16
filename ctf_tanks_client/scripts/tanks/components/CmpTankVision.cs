@@ -61,7 +61,7 @@ public class CmpTankVision
         if(!kActor.Equals(_m_node))
         {
 
-          if (IsVisible(kActor))
+          if (IsVisible(kActor) && kActor.Actor.IS_ENABLE)
           {
 
             aVisibleBodies.Add(kActor);

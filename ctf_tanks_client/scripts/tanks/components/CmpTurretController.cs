@@ -14,7 +14,8 @@ public class CmpTurretController
   public CmpTurretController(Spatial _turret)
   {
 
-    SetTurretNode(_turret);
+    SetTurretNode(_turret);    
+
     return;
 
   }  
@@ -90,6 +91,22 @@ public class CmpTurretController
   {
 
     _m_turretNode = _node;
+
+    SetSpawnPosition(_node.GetNode<Spatial>("spawn_point"));
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Set the turret bullet spawn position.
+  /// </summary>
+  /// <param name="_node"></param>
+  public void
+  SetSpawnPosition(Spatial _node)
+  {
+
+    _m_bulletSpawnPosition = _node;
     return;
 
   }
@@ -111,6 +128,15 @@ public class CmpTurretController
     get
     {
       return _m_turretNode.Transform.basis.z;
+    }
+  }
+
+  public Transform
+  GLOBAL_TRANSFORM
+  {
+    get
+    {
+      return _m_turretNode.GlobalTransform.Orthonormalized();
     }
   }
 
@@ -183,6 +209,18 @@ public class CmpTurretController
   }
 
   /// <summary>
+  /// Get the initial position of the bullet when it is spawned.
+  /// </summary>
+  public Transform
+  BULLET_SPAWN_POSITION
+  {
+    get
+    {
+      return _m_bulletSpawnPosition.GlobalTransform.Orthonormalized();
+    }
+  }
+
+  /// <summary>
   /// Reference to the turret node.
   /// </summary>
   protected Spatial _m_turretNode;
@@ -196,6 +234,11 @@ public class CmpTurretController
   /// The accepted angle between the turret direction and the vector to the
   /// target to fire the weapon.
   /// </summary>
-  protected float _m_fireOpeningAngle = 0.2f;
+  protected float _m_fireOpeningAngle = 0.1f;
+
+  /// <summary>
+  /// The position of the bullet when it is spawned.
+  /// </summary>
+  protected Spatial _m_bulletSpawnPosition;
 
 }

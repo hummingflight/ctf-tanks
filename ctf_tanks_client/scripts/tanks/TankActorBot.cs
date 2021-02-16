@@ -6,20 +6,18 @@ public class TankActorBot
 
   /**********************************************/
   /* Public                                     */
-  /**********************************************/
-  
-  public TankActorBot()
-    : base()
-  {
+  /**********************************************/  
 
-    // Create Actor
-    _m_actor = new Actor<KinematicBody>(this);
+  override public void
+  _Create()
+  {
 
     ////////////////////////////////////////////
     // Blackboard
 
     Blackboard blackboard = _m_actor.m_blackboard;
 
+    blackboard.AddItem(BLACKBOARD_ITEM.kShootSignal, new BItem());
     blackboard.AddItem(BLACKBOARD_ITEM.kTurret_Rotation, new BItem());
     blackboard.AddItem(BLACKBOARD_ITEM.kTank_Steering, new BItem());
     blackboard.AddItem(BLACKBOARD_ITEM.kAcceleration_Strength, new BItem());
@@ -39,6 +37,7 @@ public class TankActorBot
     _m_actor.AddComponent(new CmpTankPhysicsDebug());
     _m_actor.AddComponent(new CmpTankVisionDebug());
     _m_actor.AddComponent(new CmpTurretControllerDebug());
+    _m_actor.AddComponent(new CmpBulletSpawner());
 
     return;
 

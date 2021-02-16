@@ -12,7 +12,6 @@ public class Action_ShootTheEnemy
 
     // Add States
     _m_fsm.Add(new STT_Shoot());
-    _m_fsm.Add(new STT_Reload());
     _m_fsm.Add(new STT_StopShooting());
     _m_fsm.Add(new STT_TargetTheEnemy());
 

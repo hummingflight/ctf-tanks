@@ -1,8 +1,25 @@
 ﻿using Godot;
 
 public class Bullet
-: KinematicBody
+: Area
 {
+
+  public override void 
+  _Ready()
+  {
+
+    //subscribe signal.
+    Connect("body_entered", this, "_OnBodyEntered");
+
+    // Create cache damage message.
+    _m_damageMessage = new MSG_Damage();
+
+    _m_damageMessage.m_damagePoints = 2;
+    _m_damageMessage.m_object = this;
+
+    return;
+
+  }
 
   public override void 
   _PhysicsProcess(float delta)
@@ -11,8 +28,14 @@ public class Bullet
     // Rotation towards direction.
     LookAt(Transform.origin + _m_velocity, Transform.basis.y);
 
-    // Move
-    MoveAndSlide(_m_velocity, Transform.basis.y);
+    // Movement
+    Transform transform = GlobalTransform;
+
+    // Move position.
+    transform.origin += _m_velocity * delta;
+
+    // Save transform.
+    GlobalTransform = transform;
 
     return;
   
@@ -39,6 +62,9 @@ public class Bullet
       // Set bullet velocity.
       _m_velocity = _velocity;
 
+      // Rotation towards direction.
+      LookAt(Transform.origin + _m_velocity, Transform.basis.y);
+
       // Enable.
 
       _m_isEnable = !_m_isEnable;
@@ -46,9 +72,7 @@ public class Bullet
       SetProcess(_m_isEnable);
       SetPhysicsProcess(_m_isEnable);
       SetProcessInput(_m_isEnable);
-
-      // Add this bullet to the disable list.
-      _m_pool.AddToDisable(this);
+      Show();
 
     }
 
@@ -70,6 +94,10 @@ public class Bullet
       SetProcess(_m_isEnable);
       SetPhysicsProcess(_m_isEnable);
       SetProcessInput(_m_isEnable);
+      Hide();
+
+      // Add this bullet to the disable list.
+      _m_pool.AddToDisable(this);
 
     }
 
@@ -85,6 +113,24 @@ public class Bullet
   {
 
     _m_pool = _pool;
+    return;
+
+  }
+
+  private void
+  _OnBodyEntered(Node _body)
+  {
+
+    if(_body is KinematicActor actor)
+    {
+
+      // Send damage message.
+      actor.Actor.Broadcast(MESSAGE_ID.kReceive_Damage, _m_damageMessage);
+
+    }
+
+    Disable();
+
     return;
 
   }
@@ -139,5 +185,10 @@ public class Bullet
   /// Reference to the bullet pool.
   /// </summary>
   protected BulletPool _m_pool;
+
+  /// <summary>
+  /// Cache damage message.
+  /// </summary>
+  protected MSG_Damage _m_damageMessage;
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 public class Actor<T>
+  where T : Node
 {
 
   /// <summary>
@@ -15,6 +16,8 @@ public class Actor<T>
     _m_node = _node;
 
     m_blackboard = new Blackboard();
+
+    _m_aBroadcastCmd = new List<BroadcastCommand>();
 
     _m_hComponents = new Dictionary<COMPONENT_ID, Component<T>>();
 
@@ -213,11 +216,18 @@ public class Actor<T>
   Broadcast(MESSAGE_ID _messageID, IMessage _message)
   {
 
-    // Send message to each component.
-    foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
+    if(!_m_toDestroy)
     {
 
-      pair.Value.ReceiveMessage(_messageID, _message);
+      // Add broadcast command to list.
+      _m_aBroadcastCmd.Add(new BroadcastCommand(_messageID, _message));
+
+      if (!_m_isBroadcasting) // if not running, run broadcast
+      {
+
+        _RunBroadcast();
+
+      }
 
     }
 
@@ -245,6 +255,12 @@ public class Actor<T>
   Destroy()
   {
 
+    // Prepare to destroy.
+    _m_toDestroy = true;
+
+    // Remove any message.
+    _m_aBroadcastCmd.Clear();
+
     // Destroy each component.
     foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
     {
@@ -256,6 +272,8 @@ public class Actor<T>
     _m_hComponents.Clear();
     _m_hComponents = null;
 
+    // Destroy node.
+    _m_node.QueueFree();
     _m_node = default;
 
     return;
@@ -267,6 +285,90 @@ public class Actor<T>
   /// </summary>
   public Blackboard m_blackboard;
 
+  protected void
+  _RunBroadcast()
+  {
+
+    _m_isBroadcasting = true;
+
+    while(_m_aBroadcastCmd.Count > 0)
+    {
+
+      // Get command.
+      BroadcastCommand command = _m_aBroadcastCmd[0];
+
+      // Remove command from list.
+      _m_aBroadcastCmd.RemoveAt(0);
+
+      // Send message to each component.
+      foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
+      {
+
+        pair.Value.ReceiveMessage(command.m_messageID, command.m_message);
+
+      }
+
+      // Check for destroying.
+      if(command.m_messageID == MESSAGE_ID.kDestroy)
+      {
+
+        Destroy();
+
+      }
+
+    }
+
+    // update broadcasting status.
+    _m_isBroadcasting = false;
+
+    return;
+
+  }
+
+  /// <summary>
+  /// Indicates if this actor is enable.
+  /// </summary>
+  public bool
+  IS_ENABLE
+  {
+    get
+    {
+      return _m_isEnable;
+    }
+    set
+    {
+
+      _m_isEnable = value;
+
+      if (value)
+      {
+
+        // Send message to each component.
+        foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
+        {
+
+          pair.Value.OnEnable();
+
+        }
+
+      }
+      else
+      {
+
+        // Send message to each component.
+        foreach (KeyValuePair<COMPONENT_ID, Component<T>> pair in _m_hComponents)
+        {
+
+          pair.Value.OnEnable();
+
+        }
+
+      }
+
+      return;
+    }
+  }
+
   /// <summary>
   /// Map of components in this node.
   /// </summary>
@@ -275,6 +377,26 @@ public class Actor<T>
   /// <summary>
   /// The wrapped node.
   /// </summary>
-  protected T _m_node;  
+  protected T _m_node;
+
+  /// <summary>
+  /// Indicates if this actor is enable.
+  /// </summary>
+  protected bool _m_isEnable = true;
+
+  /// <summary>
+  /// Indicates if the object is ready to be destroy
+  /// </summary>
+  protected bool _m_toDestroy = false;
+
+  /// <summary>
+  /// Indicates if the actor is currently broadcasting a message.
+  /// </summary>
+  protected bool _m_isBroadcasting = false;
+
+  /// <summary>
+  /// List of broadcast commands.
+  /// </summary>
+  protected List<BroadcastCommand> _m_aBroadcastCmd;
 
 }

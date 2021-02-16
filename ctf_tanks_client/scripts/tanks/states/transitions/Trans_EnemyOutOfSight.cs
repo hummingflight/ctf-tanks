@@ -14,23 +14,49 @@ public class Trans_EnemyOutOfSight
     BItem_KinematicActor item_actor =
     _actor.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
 
-    if(item_actor.ACTOR == null)
+    Actor<KinematicBody> enemy = item_actor.ACTOR;
+
+    // Check if enemy exists.
+    if(enemy == null)
     {
 
       return true;
 
     }
 
-    if(!tankVision.IsVisible(item_actor.ACTOR.GetNode()))
+    // Check if actor is enable.
+    if(!enemy.IS_ENABLE)
     {
 
-      item_actor.ACTOR = null;
+      return true;
+
+    }
+
+    // Check if enemy is visible.
+    if(!tankVision.IsVisible(enemy.GetNode()))
+    {
+      
       return true;
 
     }
 
     return false;
 
+  }
+
+  public override void 
+  OnTransition(Actor<KinematicBody> _actor)
+  {
+
+    // Set enemy to null.
+
+    BItem_KinematicActor item_actor =
+    _actor.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
+
+    item_actor.ACTOR = null;
+
+    return;
+  
   }
 
   public override STATE_ID

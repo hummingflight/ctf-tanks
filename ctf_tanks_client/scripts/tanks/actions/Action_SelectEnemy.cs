@@ -9,27 +9,37 @@ public class Action_SelectEnemy
   Update(Actor<KinematicBody> _actor)
   {
 
+    BItem_KinematicActor item =
+      _actor.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
+
+    // Check if an active enemy exists.
+    if(item.ACTOR != null)
+    {
+
+      if(item.ACTOR.IS_ENABLE)
+      {
+
+        return NODE_STATUS.kSuccess;
+
+      }
+
+    }
+
+    // Get visible actors.
+
     CmpTankVision tankVision
      = _actor.GetComponent<CmpTankVision>(COMPONENT_ID.kTankVision);
 
     List<KinematicActor> visibleActors = tankVision.GetVisibleBodies();
 
     if(visibleActors.Count > 0)
-    {     
+    {
 
-      BItem_KinematicActor item =
-      _actor.m_blackboard.GetItem<BItem_KinematicActor>(BLACKBOARD_ITEM.kEnemy);
+      // Take the first actor.
 
-      if(item.ACTOR == null)
-      {
+      KinematicActor selected = visibleActors[0];
 
-        // Get First Actor
-        Actor<KinematicBody> actor = visibleActors[0].Actor;
-
-        // Set Enemy.
-        item.ACTOR = actor;
-
-      }
+      item.ACTOR = selected.Actor;
 
       return NODE_STATUS.kSuccess;
 
@@ -38,6 +48,26 @@ public class Action_SelectEnemy
     // No visible actors.
     return NODE_STATUS.kFailure;
   
+  }
+
+  public KinematicActor
+  SelectActor(List<KinematicActor> _aActor)
+  {
+
+    foreach(KinematicActor actor in _aActor)
+    {
+
+      if(actor.Actor.IS_ENABLE)
+      {
+
+        return actor;
+
+      }
+
+    }
+
+    return null;
+
   }
 
 }

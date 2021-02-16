@@ -206,6 +206,11 @@ shape = SubResource( 4 )
 
 [node name="TargetBox" parent="Scenary" instance=ExtResource( 2 )]
 transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 6.29488, 1.96029, 46.4058 )
+m_initialHealth = 3
+
+[node name="TargetBox2" parent="Scenary" instance=ExtResource( 2 )]
+transform = Transform( 1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 30.8289, 1.96029, 26.7824 )
+m_initialHealth = 3
 
 [node name="Cam_topOrtho" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 50.8805, 0 )

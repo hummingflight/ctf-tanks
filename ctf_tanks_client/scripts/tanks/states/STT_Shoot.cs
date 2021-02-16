@@ -4,13 +4,47 @@ public class STT_Shoot
 : FSM_State<BehaviorNode, Actor<KinematicBody>>
 {
 
-  public override NODE_STATUS
-  Update(Actor<KinematicBody> _arg)
+  public STT_Shoot()
+  : base()
   {
 
-    // TODO;
+    _m_aTransitions.Add(new Trans_EnemyOutOfSight());
 
-    return NODE_STATUS.kFailure;
+    return;
+
+  }
+
+  public override void 
+  OnEnter(Actor<KinematicBody> _actor)
+  {
+
+    BItem shootSignal =
+      _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kShootSignal);
+
+    shootSignal.iValue = 1;
+
+    return;
+
+  }
+
+  public override NODE_STATUS
+  Update(Actor<KinematicBody> _actor)
+  { 
+
+    return NODE_STATUS.kRunning;
+
+  }
+
+  public override void 
+  OnExit(Actor<KinematicBody> _actor)
+  {
+
+    BItem shootSignal =
+      _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kShootSignal);
+
+    shootSignal.iValue = 0;
+
+    return;
 
   }
 

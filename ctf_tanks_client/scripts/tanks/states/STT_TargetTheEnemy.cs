@@ -43,7 +43,7 @@ public class STT_TargetTheEnemy
     {
 
       // Enemy in fire zone, shoot!
-      //_m_fsm.SetActive(STATE_ID.kShoot, _actor);
+      _m_fsm.SetActive(STATE_ID.kShoot, _actor);
 
       BItem turretRotation
         = _actor.m_blackboard.GetItem<BItem>(BLACKBOARD_ITEM.kTurret_Rotation);

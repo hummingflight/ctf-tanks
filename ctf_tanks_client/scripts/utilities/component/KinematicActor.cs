@@ -4,11 +4,32 @@ public class KinematicActor
   : KinematicBody
 {
 
+  public KinematicActor()
+  : base()
+  {
+
+    // Create actor.
+    _m_actor = new Actor<KinematicBody>(this);
+
+    // On create callback.
+    _Create();
+
+    return;
+
+  }
+
+  public virtual void
+  _Create()
+  {
+
+    return;
+
+  }
+
   public override void 
   _Ready()
   {
-
-    _m_actor = new Actor<KinematicBody>(this);
+    
     return;
 
   }
