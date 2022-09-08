@@ -2,7 +2,6 @@ using Godot;
 
 public class DebugCanvas : Control
 {
-
   /// <summary>
   /// Setup this canvas layer as the debugging canvas.
   /// </summary>
